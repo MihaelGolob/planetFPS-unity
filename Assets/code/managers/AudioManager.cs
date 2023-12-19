@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class AudioManager : Manager  {
     public void Awake() {
-        Console.WriteLine("AudioManager initialized");
         DontDestroyOnLoad(gameObject);
     }
 }
