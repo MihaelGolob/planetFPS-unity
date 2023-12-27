@@ -81,14 +81,14 @@ public class FirstPersonController : MonoBehaviour {
        var gravityDir = (gravitySource.position - _rootTransform.position).normalized;
        var bodyDownDir = -_rootTransform.up.normalized;
        var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
-       _rootTransform.rotation *= gravityRotation;
+       _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
 
        _isGrounded = (gravitySource.position - _rootTransform.position).magnitude <= 10f; // TODO: check for isGrounded with colliders
        
        // apply gravity
        if (_isGrounded && _gravitySpeed <= 0) {
            _gravitySpeed = 0;
-
+       
            if (_keysDictionary[KeyCode.Space] > 0) {
                _gravitySpeed = jumpHeight;
            }
