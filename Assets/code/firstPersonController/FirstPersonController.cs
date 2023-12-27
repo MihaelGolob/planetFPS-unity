@@ -1,10 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using Matrix4x4 = UnityEngine.Matrix4x4;
+using Quaternion = UnityEngine.Quaternion;
 
 public class FirstPersonController : MonoBehaviour {
     // inspector assigned
@@ -16,6 +15,10 @@ public class FirstPersonController : MonoBehaviour {
     [Header("Movement parameters")] 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float airSpeed;
+
+    [Header("Gravity")] 
+    [SerializeField] private float gravityAcceleration = 9.8f;
+    [SerializeField] private Transform gravitySource;
     
     // private variables
     private Transform _rootTransform;
@@ -54,7 +57,15 @@ public class FirstPersonController : MonoBehaviour {
 
        var globalBodyMatrix = Matrix4x4.TRS(_bodyTransform.position, _bodyTransform.rotation, _bodyTransform.localScale);
        var moveVector = globalBodyMatrix.MultiplyVector(moveDir);
+       // apply movement
        _rootTransform.position += moveVector;
+       
+       // apply gravity
+       var gravityDir = (gravitySource.position - _rootTransform.position).normalized;
+       var bodyDownDir = -_rootTransform.up.normalized;
+       var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
+       Debug.Log(gravityRotation.eulerAngles);
+       _rootTransform.rotation *= gravityRotation;
     }
 
     private void UpdateKeys() {
