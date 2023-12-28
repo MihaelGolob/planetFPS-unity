@@ -19,6 +19,7 @@ public class FirstPersonController : MonoBehaviour {
     [SerializeField] private float airSpeed;
     [SerializeField] private Vector2 upDownAngleRotation = new (-85f, 75f);
     [SerializeField] private float jumpHeight = 5;
+    [SerializeField] private float jumpCooldown = 0.5f;
 
     [Header("Gravity")] 
     [SerializeField] private IsGroundedComponent isGroundedComponent;
@@ -32,6 +33,7 @@ public class FirstPersonController : MonoBehaviour {
 
     private bool _isGrounded;
     private float _gravitySpeed;
+    private float _lastJumpTime;
     
     // key tracking
     private Dictionary<KeyCode, short> _keysDictionary = new();
@@ -90,8 +92,9 @@ public class FirstPersonController : MonoBehaviour {
        if (_isGrounded && _gravitySpeed <= 0) {
            _gravitySpeed = 0;
        
-           if (_keysDictionary[KeyCode.Space] > 0) {
+           if (_keysDictionary[KeyCode.Space] > 0 && Time.time - _lastJumpTime > jumpCooldown) {
                _gravitySpeed = jumpHeight;
+               _lastJumpTime = Time.time;
            }
        } else {
            _gravitySpeed += -gravityAcceleration * Time.deltaTime;

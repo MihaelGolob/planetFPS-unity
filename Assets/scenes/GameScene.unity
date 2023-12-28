@@ -774,6 +774,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
         type: 3}
+      propertyPath: jumpCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
       propertyPath: gravitySource
       value: 
       objectReference: {fileID: 543450652939835925}
