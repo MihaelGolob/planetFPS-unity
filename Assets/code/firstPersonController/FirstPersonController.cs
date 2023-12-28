@@ -112,7 +112,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void Shoot() {
-        Debug.Log(_cameraTransform.forward);
         if (Input.GetMouseButton(0)) {
             weapon.Shoot(_cameraTransform.forward);
         }

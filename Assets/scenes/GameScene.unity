@@ -722,6 +722,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 6349609883388657480, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7132616799951716836, guid: 3e366695edd922841a7717a9dd558a49,
         type: 3}
       propertyPath: m_LocalScale.x

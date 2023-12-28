@@ -14,14 +14,22 @@ public abstract class WeaponBase : MonoBehaviour {
     // private variables
     private float _lastShootTime;
     private float _shootCooldown;
+    
+    // private components
+    private Animator _animator;
+    
+    // animator hashed parameters
+    private readonly int _shootParameter = Animator.StringToHash("Shoot");
 
     private void Start() {
         _shootCooldown = 1 / shootingFrequency;
+        _animator = GetComponent<Animator>();
     }
 
     public virtual void Shoot(Vector3 direction) {
         if (Time.time - _lastShootTime < _shootCooldown) return;
         _lastShootTime = Time.time;
+        _animator.SetTrigger("Shoot");
         
         var bulletObject = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();

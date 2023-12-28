@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6798385497491906970}
   - component: {fileID: 8933600610544780144}
   - component: {fileID: 5389488442889543475}
+  - component: {fileID: 1143274336417912228}
   m_Layer: 0
   m_Name: gunYellow
   m_TagString: Untagged
@@ -110,6 +111,27 @@ MonoBehaviour:
   bulletLifetime: 10
   shootingFrequency: 5
   bulletDamage: 10
+--- !u!95 &1143274336417912228
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631931768544464705}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cd2a074291d10c845b496e416cf4a65d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1067799969010406921
 GameObject:
   m_ObjectHideFlags: 0
