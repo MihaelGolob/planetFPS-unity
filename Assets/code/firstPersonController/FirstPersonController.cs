@@ -70,6 +70,8 @@ public class FirstPersonController : MonoBehaviour {
        if (moveDir.magnitude != 0)
            moveDir = moveDir.normalized;
 
+       _isGrounded = isGroundedComponent.isGrounded;
+       
        var speed = _isGrounded ? moveSpeed : airSpeed;
        moveDir *= speed * Time.deltaTime;
 
@@ -83,8 +85,6 @@ public class FirstPersonController : MonoBehaviour {
        var bodyDownDir = -_rootTransform.up.normalized;
        var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
        _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
-
-       _isGrounded = isGroundedComponent.isGrounded;
        
        // apply gravity
        if (_isGrounded && _gravitySpeed <= 0) {
@@ -97,7 +97,6 @@ public class FirstPersonController : MonoBehaviour {
            _gravitySpeed += -gravityAcceleration * Time.deltaTime;
        }
        
-       _isGrounded = false;
        var gravityVector = gravityDir * (-_gravitySpeed * Time.deltaTime);
        _rootTransform.position += gravityVector;
     }
