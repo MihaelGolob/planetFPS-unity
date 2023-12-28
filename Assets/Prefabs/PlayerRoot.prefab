@@ -54,6 +54,8 @@ MonoBehaviour:
   airSpeed: 3
   upDownAngleRotation: {x: -85, y: 75}
   jumpHeight: 4
+  jumpCooldown: 1
+  weapon: {fileID: 2092113688104482271}
   isGroundedComponent: {fileID: 9075180532325619646}
   gravityAcceleration: 9.8
   gravitySource: {fileID: 0}
@@ -292,7 +294,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 17.137774
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -307,7 +309,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 60
+  field of view: 70.00001
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -392,18 +394,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.0757
+      value: 0.502
       objectReference: {fileID: 0}
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0661
+      value: -0.296
       objectReference: {fileID: 0}
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.1953
+      value: 0.61
       objectReference: {fileID: 0}
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
@@ -445,6 +462,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db3513fc4f18fad4882ee7082cf913dc, type: 3}
+--- !u!114 &2092113688104482271 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5389488442889543475, guid: db3513fc4f18fad4882ee7082cf913dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 6324146239595227884}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ae5722b84e8ee4ba10e7b3c264e323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7132616799951716836 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,

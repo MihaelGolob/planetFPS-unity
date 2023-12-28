@@ -7,7 +7,7 @@ using Matrix4x4 = UnityEngine.Matrix4x4;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 
-public class FirstPersonController : MonoBehaviour {
+public class FirstPersonController : MonoBehaviour, IDamageable {
     // inspector assigned
     [Header("Game objects")]
     [SerializeField] private GameObject rootObject;
@@ -20,11 +20,17 @@ public class FirstPersonController : MonoBehaviour {
     [SerializeField] private Vector2 upDownAngleRotation = new (-85f, 75f);
     [SerializeField] private float jumpHeight = 5;
     [SerializeField] private float jumpCooldown = 0.5f;
+    
+    [Header("Shooting")]
+    [SerializeField] private WeaponBase weapon;
 
     [Header("Gravity")] 
     [SerializeField] private IsGroundedComponent isGroundedComponent;
     [SerializeField] private float gravityAcceleration = 9.8f;
     [SerializeField] private Transform gravitySource;
+    
+    // public members
+    public float Health { get; private set; } = 100f;
     
     // private variables
     private Transform _rootTransform;
@@ -51,6 +57,7 @@ public class FirstPersonController : MonoBehaviour {
         UpdateKeys();
         UpdateRotation();
         UpdateMovement();
+        Shoot();
     }
 
     private void UpdateRotation() {
@@ -104,6 +111,13 @@ public class FirstPersonController : MonoBehaviour {
        _rootTransform.position += gravityVector;
     }
 
+    private void Shoot() {
+        Debug.Log(_cameraTransform.forward);
+        if (Input.GetMouseButton(0)) {
+            weapon.Shoot(_cameraTransform.forward);
+        }
+    }
+
     private void UpdateKeys() {
         if (!_keysDictionary.ContainsKey(_keysToTrack[0])) {
             foreach (var key in _keysToTrack) {
@@ -120,7 +134,7 @@ public class FirstPersonController : MonoBehaviour {
         }
     }
 
-    private void TakeDamage(float damage) {
-        
+    public void TakeDamage(float damage) {
+        Health -= damage;
     }
 }
