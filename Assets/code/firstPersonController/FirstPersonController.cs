@@ -21,6 +21,7 @@ public class FirstPersonController : MonoBehaviour {
     [SerializeField] private float jumpHeight = 5;
 
     [Header("Gravity")] 
+    [SerializeField] private IsGroundedComponent isGroundedComponent;
     [SerializeField] private float gravityAcceleration = 9.8f;
     [SerializeField] private Transform gravitySource;
     
@@ -83,7 +84,7 @@ public class FirstPersonController : MonoBehaviour {
        var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
        _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
 
-       _isGrounded = (gravitySource.position - _rootTransform.position).magnitude <= 10f; // TODO: check for isGrounded with colliders
+       _isGrounded = isGroundedComponent.isGrounded;
        
        // apply gravity
        if (_isGrounded && _gravitySpeed <= 0) {
