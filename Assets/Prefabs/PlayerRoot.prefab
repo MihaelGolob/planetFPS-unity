@@ -125,7 +125,6 @@ GameObject:
   - component: {fileID: 6088814014224966222}
   - component: {fileID: 6352063352275206414}
   - component: {fileID: 9075180532325619646}
-  - component: {fileID: 9040944703443087775}
   m_Layer: 0
   m_Name: IsGroundedCollider
   m_TagString: Player
@@ -182,33 +181,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGrounded: 0
---- !u!54 &9040944703443087775
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3453780470939202021}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &7922603830702257423
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,6 +363,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: gunYellow
+      objectReference: {fileID: 0}
+    - target: {fileID: 1143274336417912228, guid: db3513fc4f18fad4882ee7082cf913dc,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
