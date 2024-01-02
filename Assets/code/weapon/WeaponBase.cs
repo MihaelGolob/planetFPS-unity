@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public abstract class WeaponBase : MonoBehaviour {
     [Header("basic")]
@@ -10,6 +11,9 @@ public abstract class WeaponBase : MonoBehaviour {
     [SerializeField] private float bulletLifetime;
     [SerializeField] private float shootingFrequency;
     [SerializeField] private float bulletDamage;
+    
+    [Header("Effects")]
+    [SerializeField] private VisualEffect muzzleFlash;
     
     // private variables
     private float _lastShootTime;
@@ -34,5 +38,8 @@ public abstract class WeaponBase : MonoBehaviour {
         var bulletObject = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();
         bullet.Init(direction, gravitySource, bulletSpeed, bulletDamage, bulletLifetime);
+        
+        // effects
+        muzzleFlash.Play();
     }
 }
