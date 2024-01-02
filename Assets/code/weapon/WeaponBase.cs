@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -14,6 +15,8 @@ public abstract class WeaponBase : MonoBehaviour {
     
     [Header("Effects")]
     [SerializeField] private VisualEffect muzzleFlash;
+    [SerializeField] private Light muzzleLight;
+    [SerializeField] private float lightDuration = 0.1f;
     
     // private variables
     private float _lastShootTime;
@@ -41,5 +44,12 @@ public abstract class WeaponBase : MonoBehaviour {
         
         // effects
         muzzleFlash.Play();
+        StartCoroutine(ShowLight());
+    }
+
+    private IEnumerator ShowLight() {
+        muzzleLight.enabled = true;
+        yield return new WaitForSeconds(lightDuration);
+        muzzleLight.enabled = false;
     }
 }
