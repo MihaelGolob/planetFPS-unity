@@ -26,13 +26,13 @@ public abstract class WeaponBase : MonoBehaviour {
         _animator = GetComponent<Animator>();
     }
 
-    public virtual void Shoot(Vector3 direction) {
+    public virtual void Shoot(Vector3 direction, Vector3 gravitySource) {
         if (Time.time - _lastShootTime < _shootCooldown) return;
         _lastShootTime = Time.time;
-        _animator.SetTrigger("Shoot");
+        _animator.SetTrigger(_shootParameter);
         
         var bulletObject = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();
-        bullet.Init(direction, bulletSpeed, bulletDamage, bulletLifetime);
+        bullet.Init(direction, gravitySource, bulletSpeed, bulletDamage, bulletLifetime);
     }
 }

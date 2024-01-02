@@ -107,7 +107,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2392175189532798469, guid: 63c0b022037bbc34f8b25506bc963610,
     type: 3}
   bulletSpawnPoint: {fileID: 2913208474601270654}
-  bulletSpeed: 10
+  bulletSpeed: 15
   bulletLifetime: 10
   shootingFrequency: 5
   bulletDamage: 10
