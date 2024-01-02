@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
     
     // private variables
     private bool _isInitialized;
-    private readonly float _gravityFactor = 10f;
+    private readonly float _gravityFactor = 15f;
     private Vector3 _gravityVelocity;
 
     private Rigidbody _rb;
