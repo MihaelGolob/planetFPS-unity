@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
@@ -43,10 +44,16 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private bool _isGrounded;
     private float _gravitySpeed;
     private float _lastJumpTime;
+
+    private bool _canZipline;
+    private Collider _ziplineEnterCollider;
+    private Zipline _activeZipline;
+    private bool _isZiplining;
     
     // key tracking
     private Dictionary<KeyCode, short> _keysDictionary = new();
-    private List<KeyCode> _keysToTrack = new() {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space};
+    private List<KeyCode> _keysToTrack = new() {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space, KeyCode.E};
+    private Vector3 _lastMousePosition;
     private float _cameraAngle;
 
     private void Start() {
@@ -60,6 +67,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         UpdateRotation();
         UpdateMovement();
         Shoot();
+        Zipline();
     }
 
     private void UpdateRotation() {
@@ -74,46 +82,85 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void UpdateMovement() {
-       var moveDir = new Vector3(_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A], 0, _keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]);
+        if (_isZiplining) return;
+        
+        var moveDir = new Vector3(_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A], 0, _keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]);
 
-       if (moveDir.magnitude != 0)
+        if (moveDir.magnitude != 0)
            moveDir = moveDir.normalized;
 
-       _isGrounded = isGroundedComponent.isGrounded;
-       
-       var speed = _isGrounded ? moveSpeed : airSpeed;
-       moveDir *= speed * Time.deltaTime;
+        _isGrounded = isGroundedComponent.isGrounded;
 
-       var globalBodyMatrix = Matrix4x4.TRS(_bodyTransform.position, _bodyTransform.rotation, _bodyTransform.localScale);
-       var moveVector = globalBodyMatrix.MultiplyVector(moveDir);
-       // apply movement
-       _rootTransform.position += moveVector;
-       
-       // apply gravitational rotation
-       var gravityDir = (gravitySource.position - _rootTransform.position).normalized;
-       var bodyDownDir = -_rootTransform.up.normalized;
-       var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
-       _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
-       
-       // apply gravity
-       if (_isGrounded && _gravitySpeed <= 0) {
+        var speed = _isGrounded ? moveSpeed : airSpeed;
+        moveDir *= speed * Time.deltaTime;
+
+        var globalBodyMatrix = Matrix4x4.TRS(_bodyTransform.position, _bodyTransform.rotation, _bodyTransform.localScale);
+        var moveVector = globalBodyMatrix.MultiplyVector(moveDir);
+        // apply movement
+        _rootTransform.position += moveVector;
+
+        // apply gravitational rotation
+        var gravityDir = (gravitySource.position - _rootTransform.position).normalized;
+        var bodyDownDir = -_rootTransform.up.normalized;
+        var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
+        _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
+
+        // apply gravity
+        if (_isGrounded && _gravitySpeed <= 0) {
            _gravitySpeed = 0;
-       
+
            if (_keysDictionary[KeyCode.Space] > 0 && Time.time - _lastJumpTime > jumpCooldown) {
                _gravitySpeed = jumpHeight;
                _lastJumpTime = Time.time;
            }
-       } else {
+        } else {
            _gravitySpeed += -gravityAcceleration * Time.deltaTime;
-       }
-       
-       var gravityVector = gravityDir * (-_gravitySpeed * Time.deltaTime);
-       _rootTransform.position += gravityVector;
+        }
+
+        var gravityVector = gravityDir * (-_gravitySpeed * Time.deltaTime);
+        _rootTransform.position += gravityVector;
     }
 
     private void Shoot() {
         if (Input.GetMouseButton(0)) {
             weapon.Shoot(_cameraTransform.forward, gravitySource.position);
+        }
+    }
+
+    private void Zipline() {
+        if (!_canZipline || _isZiplining) return;
+        
+        if (Input.GetKeyDown(KeyCode.E)) {
+            _isZiplining = true;
+            var info = _activeZipline.GetZiplineInfo(_ziplineEnterCollider);
+            StartCoroutine(ZiplineInterpolation(info));
+        }
+    }
+
+    private IEnumerator ZiplineInterpolation((Vector3 start, Vector3 end, float speed) info) {
+        var t = 0f;
+        while (t < 1f) {
+            t += Time.deltaTime * info.speed;
+            _rootTransform.position = Vector3.Lerp(info.start, info.end, t);
+            yield return null;
+        }
+        
+        _isZiplining = false;
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Zipline")) {
+            _canZipline = true;
+            _ziplineEnterCollider = other;
+            _activeZipline = other.transform.parent.parent.GetComponent<Zipline>();
+        }
+    }
+    
+    private void OnTriggerExit(Collider other) {
+        if (other.CompareTag("Zipline")) {
+            _canZipline = false;
+            _ziplineEnterCollider = null;
+            _activeZipline = null;
         }
     }
 
