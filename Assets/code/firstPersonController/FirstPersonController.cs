@@ -8,6 +8,7 @@ using Matrix4x4 = UnityEngine.Matrix4x4;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 
+[RequireComponent(typeof(Rigidbody))]
 public class FirstPersonController : MonoBehaviour, IDamageable {
     // inspector assigned
     [Header("Game objects")]
@@ -23,7 +24,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [SerializeField] private float airSpeed;
     [SerializeField] private Vector2 upDownAngleRotation = new (-85f, 75f);
     [SerializeField] private float jumpHeight = 5;
-    [SerializeField] private float jumpCooldown = 0.5f;
     
     [Header("Shooting")]
     [SerializeField] private WeaponBase weapon;
@@ -40,6 +40,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private Transform _rootTransform;
     private Transform _bodyTransform;
     private Transform _cameraTransform;
+    private Rigidbody _rigidbody;
 
     private bool _isGrounded;
     private float _gravitySpeed;
@@ -60,6 +61,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _rootTransform = rootObject.transform;
         _bodyTransform = bodyObject.transform;
         _cameraTransform = cameraObject.transform;
+        _rigidbody = GetComponent<Rigidbody>();
     }
     
     public void Update() {
@@ -83,21 +85,20 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     private void UpdateMovement() {
         if (_isZiplining) return;
-        
-        var moveDir = new Vector3(_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A], 0, _keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]);
+
+        Vector3 moveDir =
+            _bodyTransform.forward * (_keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]) +
+            _bodyTransform.right * (_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A]);
 
         if (moveDir.magnitude != 0)
-           moveDir = moveDir.normalized;
+            moveDir = moveDir.normalized;
 
         _isGrounded = isGroundedComponent.isGrounded;
 
         var speed = _isGrounded ? moveSpeed : airSpeed;
         moveDir *= speed * Time.deltaTime;
 
-        var globalBodyMatrix = Matrix4x4.TRS(_bodyTransform.position, _bodyTransform.rotation, _bodyTransform.localScale);
-        var moveVector = globalBodyMatrix.MultiplyVector(moveDir);
-        // apply movement
-        _rootTransform.position += moveVector;
+        _rigidbody.velocity = moveDir;
 
         // apply gravitational rotation
         var gravityDir = (gravitySource.position - _rootTransform.position).normalized;
@@ -106,19 +107,22 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
 
         // apply gravity
-        if (_isGrounded && _gravitySpeed <= 0) {
-           _gravitySpeed = 0;
+        if (_isGrounded && _gravitySpeed <= 0)
+        {
+            _gravitySpeed = 0;
 
-           if (_keysDictionary[KeyCode.Space] > 0 && Time.time - _lastJumpTime > jumpCooldown) {
-               _gravitySpeed = jumpHeight;
-               _lastJumpTime = Time.time;
-           }
-        } else {
-           _gravitySpeed += -gravityAcceleration * Time.deltaTime;
+            if (_keysDictionary[KeyCode.Space] > 0)
+            {
+                _gravitySpeed = jumpHeight;
+            }
+        }
+        else
+        {
+            _gravitySpeed += -gravityAcceleration * Time.deltaTime;
         }
 
         var gravityVector = gravityDir * (-_gravitySpeed * Time.deltaTime);
-        _rootTransform.position += gravityVector;
+        _rootTransform.position += gravityVector; //let it be 4 now :D
     }
 
     private void Shoot() {
@@ -133,7 +137,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         if (Input.GetKeyDown(KeyCode.E)) {
             _isZiplining = true;
             var info = _activeZipline.GetZiplineInfo(_ziplineEnterCollider);
-            StartCoroutine(ZiplineInterpolation(info));
+            gravitySource = info.new_planet;
+            StartCoroutine(ZiplineInterpolation((info.start, info.end, info.speed)));
         }
     }
 

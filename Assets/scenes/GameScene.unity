@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0007787092, g: 0.0041236565, b: 0.019990839, a: 1}
+  m_IndirectSpecularColor: {r: 0.00077867036, g: 0.0041233166, b: 0.019989327, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12194,7 +12194,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &891283604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12220,12 +12220,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891283603}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1335361781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &891639781
 GameObject:
@@ -18870,6 +18870,64 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329191624}
   m_Mesh: {fileID: -5495902117074765545, guid: a849f6222ddc50d42ae1ab6afc7f27fb, type: 3}
+--- !u!1 &1335361779
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1335361781}
+  - component: {fileID: 1335361780}
+  - component: {fileID: 1335361782}
+  m_Layer: 0
+  m_Name: GlobalShaite
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1335361780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335361779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8ec5c238f8732148baf07642a45218b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1335361781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335361779}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 891283605}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1335361782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335361779}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9820afce3d99e459cefd4be553c1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1337348467
 GameObject:
   m_ObjectHideFlags: 0
@@ -31418,7 +31476,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5849256589008758904, guid: 6dc0aa0830492cb40bebcb148fd0ecc3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 9029239158045528290, guid: 6dc0aa0830492cb40bebcb148fd0ecc3,
@@ -31958,6 +32017,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zipline
       objectReference: {fileID: 0}
+    - target: {fileID: 2301959644401987393, guid: b63d107ea0415f64181f2ab7460a979e,
+        type: 3}
+      propertyPath: end_planet
+      value: 
+      objectReference: {fileID: 1387130618}
+    - target: {fileID: 2301959644401987393, guid: b63d107ea0415f64181f2ab7460a979e,
+        type: 3}
+      propertyPath: start_planet
+      value: 
+      objectReference: {fileID: 543450652939835925}
     - target: {fileID: 6534120188197319353, guid: b63d107ea0415f64181f2ab7460a979e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -32055,6 +32124,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.22
       objectReference: {fileID: 0}
+    - target: {fileID: 6352063352275206414, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045494195975887244, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045494195975887244, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 8106361492951148683, guid: 3e366695edd922841a7717a9dd558a49,
         type: 3}
       propertyPath: m_IsKinematic
@@ -32112,9 +32196,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
         type: 3}
+      propertyPath: airSpeed
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: moveSpeed
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: jumpHeight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
       propertyPath: gravitySource
       value: 
       objectReference: {fileID: 543450652939835925}
+    - target: {fileID: 8672332741258752205, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: mouseSensitivity
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -32132,7 +32236,7 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 891283605}
   - {fileID: 8258273039444743457}
   - {fileID: 5698410386385887708}
   - {fileID: 365479209}
+  - {fileID: 1335361781}

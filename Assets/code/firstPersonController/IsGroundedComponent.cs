@@ -3,24 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IsGroundedComponent : MonoBehaviour {
-   [HideInInspector] public bool isGrounded;
-   
-   private void OnCollisionEnter(Collision other) {
-       if (other.gameObject.CompareTag("Planet")) {
-           isGrounded = true;
-       }
-   }
+public class IsGroundedComponent : MonoBehaviour
+{
+    public bool isGrounded { get { return collision_count > 0; } }
+    private int collision_count = 0;
 
-   private void OnCollisionStay(Collision other) {
-       if (other.gameObject.CompareTag("Planet")) {
-           isGrounded = true;
-       } 
-   }
-   
-   private void OnCollisionExit(Collision other) {
-       if (other.gameObject.CompareTag("Planet")) {
-           isGrounded = false;
-       }
-   }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.isTrigger)
+            collision_count++;
+    }
+
+    private void OnTriggerExit(UnityEngine.Collider other)
+    {
+        if (!other.isTrigger)
+            collision_count--;
+    }
 }

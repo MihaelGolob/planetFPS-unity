@@ -7,6 +7,9 @@ using UnityEngine;
 public class Zipline : MonoBehaviour {
     [SerializeField] private Transform start;
     [SerializeField] private Transform end;
+    [SerializeField] private Transform start_planet;
+    [SerializeField] private Transform end_planet;
+
     [SerializeField] private float speed = 1f;
     [Header("Cable")]
     [SerializeField] private float cableRadius = 0.1f;
@@ -90,13 +93,13 @@ public class Zipline : MonoBehaviour {
         }
     }
 
-    public (Vector3 start, Vector3 end, float speed) GetZiplineInfo(Collider enterCollider) {
+    public (Vector3 start, Vector3 end, float speed, Transform new_planet) GetZiplineInfo(Collider enterCollider) {
         if (enterCollider == startCollider) {
-            return (start.position, end.position, speed);
+            return (start.position, end.position, speed, end_planet);
         } else if (enterCollider == endCollider) {
-            return (end.position, start.position, speed);
+            return (end.position, start.position, speed, start_planet);
         } else {
-            return (Vector3.zero, Vector3.zero, 0);
+            return (Vector3.zero, Vector3.zero, 0, null);
         }
     }
 }
