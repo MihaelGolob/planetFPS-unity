@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8570272240717941203}
   - component: {fileID: 8672332741258752205}
   - component: {fileID: 3142030123918443441}
+  - component: {fileID: 3451688154807740107}
   m_Layer: 0
   m_Name: PlayerRoot
   m_TagString: Player
@@ -50,6 +51,7 @@ MonoBehaviour:
   rootObject: {fileID: 724334843661441698}
   bodyObject: {fileID: 813383554747945076}
   cameraObject: {fileID: 7922603830702257423}
+  mouseSensitivity: 2
   moveSpeed: 6
   airSpeed: 3
   upDownAngleRotation: {x: -85, y: 75}
@@ -82,6 +84,18 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &3451688154807740107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724334843661441698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8ec5c238f8732148baf07642a45218b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &813383554747945076
 GameObject:
   m_ObjectHideFlags: 0

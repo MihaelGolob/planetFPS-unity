@@ -14,6 +14,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [SerializeField] private GameObject bodyObject;
     [SerializeField] private GameObject cameraObject;
 
+    [Header("Mouse parameters")]
+    [SerializeField] private float mouseSensitivity = 5.0f;
+
     [Header("Movement parameters")] 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float airSpeed;
@@ -44,7 +47,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     // key tracking
     private Dictionary<KeyCode, short> _keysDictionary = new();
     private List<KeyCode> _keysToTrack = new() {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space};
-    private Vector3 _lastMousePosition;
     private float _cameraAngle;
 
     private void Start() {
@@ -61,9 +63,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void UpdateRotation() {
-        var mousePosition = Input.mousePosition;
-        var mouseDeltaPosition = mousePosition - _lastMousePosition;
-        _lastMousePosition = mousePosition;
+        Vector3 mouseDeltaPosition = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseSensitivity;
 
         // y axis
         _cameraAngle += mouseDeltaPosition.y;
