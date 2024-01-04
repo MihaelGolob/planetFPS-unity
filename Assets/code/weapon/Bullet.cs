@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
     // parameters
-    private Vector3 _gravitySource;
     private float _speed;
     private float _lifetime;
     private float _damage;
@@ -12,11 +11,11 @@ public class Bullet : MonoBehaviour {
     private bool _isInitialized;
     private readonly float _gravityFactor = 15f;
     private Vector3 _gravityVelocity;
+    private Vector3 _gravitySource;
 
     private Rigidbody _rb;
 
-    public void Init(Vector3 direction, Vector3 gravitySource, float speed, float damage, float lifetime) {
-        _gravitySource = gravitySource;
+    public void Init(Vector3 direction, float speed, float damage, float lifetime) {
         _speed = speed;
         _lifetime = lifetime;
         _damage = damage;
@@ -29,6 +28,7 @@ public class Bullet : MonoBehaviour {
     private void FixedUpdate() {
         if (!_isInitialized) return;
         
+        _gravitySource = GravityManager.Instance.GetGravity(transform.position);
         var gravityVector = _gravityFactor * (_gravitySource - transform.position).normalized;
         // _gravityVelocity += gravityVector;
         _rb.AddForce(gravityVector, ForceMode.Acceleration);

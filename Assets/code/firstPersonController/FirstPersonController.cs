@@ -85,21 +85,21 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void UpdateMovement() {
-        if (!_isZiplining) {
-            Vector3 moveDir =
-                _bodyTransform.forward * (_keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]) +
-                _bodyTransform.right * (_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A]);
+        if (_isZiplining) return;
+        
+        Vector3 moveDir =
+            _bodyTransform.forward * (_keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]) +
+            _bodyTransform.right * (_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A]);
 
-            if (moveDir.magnitude != 0)
-                moveDir = moveDir.normalized;
+        if (moveDir.magnitude != 0)
+            moveDir = moveDir.normalized;
 
-            _isGrounded = isGroundedComponent.isGrounded;
+        _isGrounded = isGroundedComponent.isGrounded;
 
-            var speed = _isGrounded ? moveSpeed : airSpeed;
-            moveDir *= speed * Time.deltaTime;
+        var speed = _isGrounded ? moveSpeed : airSpeed;
+        moveDir *= speed * Time.deltaTime;
 
-            _rigidbody.velocity = moveDir;
-        }
+        _rigidbody.velocity = moveDir;
 
         // set source
         _gravitySource = GravityManager.Instance.GetGravity(transform.position);
@@ -131,7 +131,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     private void Shoot() {
         if (Input.GetMouseButton(0)) {
-            weapon.Shoot(_cameraTransform.forward, _gravitySource);
+            weapon.Shoot(_cameraTransform.forward);
         }
     }
 

@@ -6,8 +6,8 @@ public class GravityManager : ManagerBase{
     // singleton pattern
     public static GravityManager Instance { get; private set; }
     
-    private void Awake() {
-        DontDestroyOnLoad(gameObject);
+    protected override void Awake() {
+        base.Awake();
         
         if (Instance != null && Instance != this) {
             Destroy(this);
