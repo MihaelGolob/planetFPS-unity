@@ -35,7 +35,7 @@ public abstract class WeaponBase : MonoBehaviour {
         _animator = GetComponent<Animator>();
     }
 
-    public virtual void Shoot(Vector3 direction) {
+    public virtual void Shoot(Vector3 direction, Vector3 shotPosition) {
         if (Time.time - _lastShootTime < _shootCooldown) return;
         _lastShootTime = Time.time;
         _animator.SetTrigger(_shootParameter);
@@ -45,7 +45,7 @@ public abstract class WeaponBase : MonoBehaviour {
         bullet.Init(direction, bulletSpeed, bulletDamage, bulletLifetime);
         
         // effects
-        AudioSystem.Instance.PlaySound(shootAudioCollection, transform.position);
+        AudioSystem.Instance.PlaySound(shootAudioCollection, shotPosition);
         muzzleFlash.Play();
         StartCoroutine(ShowLight());
     }

@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e50880d18ab4389b43959efee62eb2d, type: 3}
   m_Name: PistolAudioCollection
   m_EditorClassIdentifier: 
-  _audioGroup: 
+  _audioGroup: Effects
   _volume: 1
   _spatialBlend: 1
   _priority: 128
   _playOrder: 1
   _loop: 0
   _stopOnSceneChange: 1
-  _audioClips: []
+  _audioClips:
+  - {fileID: 8300000, guid: e18787871ab2e424ca65feab253ad876, type: 3}
+  - {fileID: 8300000, guid: b0694807b5377d14fa38e3c624bc4456, type: 3}
