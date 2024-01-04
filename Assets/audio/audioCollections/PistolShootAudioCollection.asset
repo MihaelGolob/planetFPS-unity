@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e50880d18ab4389b43959efee62eb2d, type: 3}
-  m_Name: PistolAudioCollection
+  m_Name: PistolShootAudioCollection
   m_EditorClassIdentifier: 
   _audioGroup: Effects
   _volume: 1

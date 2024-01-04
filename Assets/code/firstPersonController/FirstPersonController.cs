@@ -54,7 +54,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     
     // key tracking
     private Dictionary<KeyCode, short> _keysDictionary = new();
-    private List<KeyCode> _keysToTrack = new() {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space, KeyCode.E};
+    private readonly List<KeyCode> _keysToTrack = new() {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space, KeyCode.E, KeyCode.R};
     private Vector3 _lastMousePosition;
     private float _cameraAngle;
 
@@ -70,6 +70,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         UpdateRotation();
         UpdateMovement();
         Shoot();
+        Reload();
         Zipline();
     }
 
@@ -132,6 +133,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private void Shoot() {
         if (Input.GetMouseButton(0)) {
             weapon.Shoot(_cameraTransform.forward, transform.position);
+        }
+    }
+    
+    private void Reload() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            weapon.Reload();
         }
     }
 

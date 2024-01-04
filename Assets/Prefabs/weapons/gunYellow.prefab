@@ -111,10 +111,16 @@ MonoBehaviour:
   bulletLifetime: 10
   shootingFrequency: 5
   bulletDamage: 10
+  magazineSize: 5
+  reloadTime: 2
   muzzleFlash: {fileID: 2848065083022603530}
   muzzleLight: {fileID: 5328014361992468016}
   lightDuration: 0.1
   shootAudioCollection: {fileID: 11400000, guid: 6b6dc3f36c073f24fa72750cbdb67326,
+    type: 2}
+  emptyMagazineAudioCollection: {fileID: 11400000, guid: ca429ee34d065964cba5dde2f19f5e99,
+    type: 2}
+  reloadAudioCollection: {fileID: 11400000, guid: 049c6375e02c6b248bded9dba97e5cde,
     type: 2}
 --- !u!95 &1143274336417912228
 Animator:
