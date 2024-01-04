@@ -50,17 +50,19 @@ public class Bullet : MonoBehaviour {
         }
     }
     
-    private void OnTriggerEnter(Collider other) {
+    private void OnCollisionEnter(Collision other) {
         if (!_isInitialized || _collision) return;
-        _collision = true;
         
-        var damageable = other.GetComponent<IDamageable>();
+        _collision = true;
+        _rb.isKinematic = true;
+        
+        var damageable = other.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
         
         bulletImpact.Play();
         
         _meshRenderer.enabled = false;
-        _rb.velocity = Vector3.zero;
-        Destroy(gameObject, 4);
+        
+        Destroy(gameObject, 3);
     }
 }
