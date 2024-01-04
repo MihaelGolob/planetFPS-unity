@@ -41,28 +41,31 @@ public class Bullet : MonoBehaviour {
         _rb.AddForce(gravityVector, ForceMode.Acceleration);
     }
 
+    void bulletExplode()
+    {
+        _collision = true;
+        _rb.isKinematic = true;
+
+        bulletImpact.Play();
+        _meshRenderer.enabled = false;
+        Destroy(gameObject, 3);
+    }
+
     private void Update() {
         if (!_isInitialized || _collision) return;
         
         _lifetime -= Time.deltaTime;
         if (_lifetime <= 0) {
-            Destroy(gameObject);
+            bulletExplode();
         }
     }
     
     private void OnCollisionEnter(Collision other) {
         if (!_isInitialized || _collision) return;
         
-        _collision = true;
-        _rb.isKinematic = true;
-        
         var damageable = other.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
-        
-        bulletImpact.Play();
-        
-        _meshRenderer.enabled = false;
-        
-        Destroy(gameObject, 3);
+
+        bulletExplode();
     }
 }
