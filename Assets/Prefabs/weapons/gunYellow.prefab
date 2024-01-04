@@ -114,6 +114,8 @@ MonoBehaviour:
   muzzleFlash: {fileID: 2848065083022603530}
   muzzleLight: {fileID: 5328014361992468016}
   lightDuration: 0.1
+  shootAudioCollection: {fileID: 11400000, guid: 6b6dc3f36c073f24fa72750cbdb67326,
+    type: 2}
 --- !u!95 &1143274336417912228
 Animator:
   serializedVersion: 5

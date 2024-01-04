@@ -1,4 +1,5 @@
 using System.Collections;
+using Ineor.Utils.AudioSystem;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -17,6 +18,7 @@ public abstract class WeaponBase : MonoBehaviour {
     [SerializeField] private VisualEffect muzzleFlash;
     [SerializeField] private Light muzzleLight;
     [SerializeField] private float lightDuration = 0.1f;
+    [SerializeField] private AudioCollection shootAudioCollection;
     
     // private variables
     private float _lastShootTime;
@@ -43,6 +45,7 @@ public abstract class WeaponBase : MonoBehaviour {
         bullet.Init(direction, bulletSpeed, bulletDamage, bulletLifetime);
         
         // effects
+        AudioSystem.Instance.PlaySound(shootAudioCollection, transform.position);
         muzzleFlash.Play();
         StartCoroutine(ShowLight());
     }
