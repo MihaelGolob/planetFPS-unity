@@ -31,7 +31,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [Header("Gravity")] 
     [SerializeField] private IsGroundedComponent isGroundedComponent;
     [SerializeField] private float gravityAcceleration = 9.8f;
-    [SerializeField] private Transform gravitySource;
+    
+    private Vector3 _gravitySource;
     
     // public members
     public float Health { get; private set; } = 100f;
@@ -84,24 +85,27 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void UpdateMovement() {
-        if (_isZiplining) return;
+        if (!_isZiplining) {
+            Vector3 moveDir =
+                _bodyTransform.forward * (_keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]) +
+                _bodyTransform.right * (_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A]);
 
-        Vector3 moveDir =
-            _bodyTransform.forward * (_keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]) +
-            _bodyTransform.right * (_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A]);
+            if (moveDir.magnitude != 0)
+                moveDir = moveDir.normalized;
 
-        if (moveDir.magnitude != 0)
-            moveDir = moveDir.normalized;
+            _isGrounded = isGroundedComponent.isGrounded;
 
-        _isGrounded = isGroundedComponent.isGrounded;
+            var speed = _isGrounded ? moveSpeed : airSpeed;
+            moveDir *= speed * Time.deltaTime;
 
-        var speed = _isGrounded ? moveSpeed : airSpeed;
-        moveDir *= speed * Time.deltaTime;
+            _rigidbody.velocity = moveDir;
+        }
 
-        _rigidbody.velocity = moveDir;
+        // set source
+        _gravitySource = GravityManager.Instance.GetGravity(transform.position);
 
         // apply gravitational rotation
-        var gravityDir = (gravitySource.position - _rootTransform.position).normalized;
+        var gravityDir = (_gravitySource - _rootTransform.position).normalized;
         var bodyDownDir = -_rootTransform.up.normalized;
         var gravityRotation = Quaternion.FromToRotation(bodyDownDir, gravityDir);
         _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
@@ -127,7 +131,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     private void Shoot() {
         if (Input.GetMouseButton(0)) {
-            weapon.Shoot(_cameraTransform.forward, gravitySource.position);
+            weapon.Shoot(_cameraTransform.forward, _gravitySource);
         }
     }
 
@@ -137,7 +141,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         if (Input.GetKeyDown(KeyCode.E)) {
             _isZiplining = true;
             var info = _activeZipline.GetZiplineInfo(_ziplineEnterCollider);
-            gravitySource = info.new_planet;
             StartCoroutine(ZiplineInterpolation((info.start, info.end, info.speed)));
         }
     }
