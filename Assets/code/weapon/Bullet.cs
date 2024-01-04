@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Bullet : MonoBehaviour {
+    [SerializeField] private VisualEffect bulletImpact;
+    
     // parameters
     private float _speed;
     private float _lifetime;
@@ -13,7 +16,10 @@ public class Bullet : MonoBehaviour {
     private Vector3 _gravityVelocity;
     private Vector3 _gravitySource;
 
+    private bool _collision;
+
     private Rigidbody _rb;
+    private MeshRenderer _meshRenderer;
 
     public void Init(Vector3 direction, float speed, float damage, float lifetime) {
         _speed = speed;
@@ -23,10 +29,11 @@ public class Bullet : MonoBehaviour {
         _isInitialized = true;
         _rb = GetComponent<Rigidbody>();
         _rb.velocity = direction * speed;
+        _meshRenderer = GetComponent<MeshRenderer>();
     }
 
     private void FixedUpdate() {
-        if (!_isInitialized) return;
+        if (!_isInitialized || _collision) return;
         
         _gravitySource = GravityManager.Instance.GetGravity(transform.position);
         var gravityVector = _gravityFactor * (_gravitySource - transform.position).normalized;
@@ -35,7 +42,7 @@ public class Bullet : MonoBehaviour {
     }
 
     private void Update() {
-        if (!_isInitialized) return;
+        if (!_isInitialized || _collision) return;
         
         _lifetime -= Time.deltaTime;
         if (_lifetime <= 0) {
@@ -44,11 +51,16 @@ public class Bullet : MonoBehaviour {
     }
     
     private void OnTriggerEnter(Collider other) {
-        if (!_isInitialized) return;
+        if (!_isInitialized || _collision) return;
+        _collision = true;
         
         var damageable = other.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
         
-        Destroy(gameObject);
+        bulletImpact.Play();
+        
+        _meshRenderer.enabled = false;
+        _rb.velocity = Vector3.zero;
+        Destroy(gameObject, 4);
     }
 }
