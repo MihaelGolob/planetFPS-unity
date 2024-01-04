@@ -18881,6 +18881,7 @@ GameObject:
   - component: {fileID: 1335361781}
   - component: {fileID: 1335361780}
   - component: {fileID: 1335361782}
+  - component: {fileID: 1335361783}
   m_Layer: 0
   m_Name: GlobalShaite
   m_TagString: Untagged
@@ -18923,9 +18924,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335361779}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e9820afce3d99e459cefd4be553c1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1335361783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335361779}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3efa51fc4f6c3a84d8e61ea9ad266423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1337348467
