@@ -67,6 +67,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _cameraTransform = cameraObject.transform;
         _rigidbody = GetComponent<Rigidbody>();
         _network_manager = NetworkManager.game_object.GetComponent<NetworkManager>();
+        _network_manager.tx_spawn_player(_rootTransform.position);
         
         HUDManager.Instance.UpdateHealth(Health);
     }

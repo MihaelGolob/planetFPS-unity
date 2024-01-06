@@ -5,19 +5,37 @@ using System.IO;
 using System.Net.Sockets;
 using UnityEngine;
 using System.Threading;
+using UnityEngine.Networking.PlayerConnection;
+using UnityEngine.UIElements;
+
+public enum MsgFormat
+{
+    DestroyPlayer = 1,
+    SpawnPlayer,
+    MovePlayer,
+    Hello
+}
+
+class NetworkMessage
+{
+    public UInt32 target;
+    public byte[] data;
+    public NetworkMessage(uint target, byte[] data)
+    {
+        this.target = target;
+        this.data = data;
+    }
+}
 
 public class NetworkManager : MonoBehaviour
 {
-    public enum MsgFormat
-    {
-        SpawnPlayer = 1,
-        DestroyPlayer,
-        MovePlayer
-    }
-
     public static GameObject game_object;
+    Queue<NetworkMessage> messages = new Queue<NetworkMessage>(100);
+    NetworkMessage move_message = new NetworkMessage(1000, null);
 
-    public void tx_spawn_player(Vector3 position) {
+    Dictionary<UInt32, GameObject> network_players = new Dictionary<uint, GameObject>(20);
+
+    void tx_spawn_player_single(UInt32 target, Vector3 position) {
         byte[] packet = new byte[sizeof(UInt32) + 3*sizeof(float)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
@@ -28,11 +46,15 @@ public class NetworkManager : MonoBehaviour
         binWriter.Write(position.z);
         binWriter.Flush();
 
-        //Hmm v resnici bi mogli to queueat.
-
-        //broadcast
-        NetworkClient.send(0, packet);
+        messages.Enqueue(new NetworkMessage(target, packet));
     }
+
+    public void tx_spawn_player(Vector3 position)
+    {
+        //broadcast
+        tx_spawn_player_single(0, position);
+    }
+
     public void tx_destroy_player() {
         byte[] packet = new byte[sizeof(UInt32)];
         MemoryStream memStream = new MemoryStream(packet);
@@ -42,7 +64,8 @@ public class NetworkManager : MonoBehaviour
         binWriter.Flush();
 
         //broadcast
-        NetworkClient.send(0, packet);
+        //NetworkClient.send(0, packet);
+        messages.Equals(new NetworkMessage(0, packet));
     }
     public void tx_move_player(Vector3 position, Quaternion rotation)
     {
@@ -63,7 +86,22 @@ public class NetworkManager : MonoBehaviour
         binWriter.Flush();
 
         //broadcast
-        NetworkClient.send(0, packet);
+        //NetworkClient.send(0, packet);
+        move_message = new NetworkMessage(0, packet);
+    }
+
+    void tx_hello(UInt32 target) //like tx spawn player, but not broadcast
+    {
+        byte[] packet = new byte[sizeof(UInt32) + 3 * sizeof(float)];
+        MemoryStream memStream = new MemoryStream(packet);
+        BinaryWriter binWriter = new BinaryWriter(memStream);
+
+        binWriter.Write((UInt32)MsgFormat.Hello);
+        binWriter.Flush();
+
+        //broadcast
+        //NetworkClient.send(0, packet);
+        messages.Enqueue(new NetworkMessage(target, packet));
     }
 
     Vector3 parse_vec3(byte[] packet, int offset)
@@ -110,29 +148,71 @@ public class NetworkManager : MonoBehaviour
                     rx_move_player(sender, pos, rot);
                     return;
                 }
+            case MsgFormat.Hello:
+                {
+                    rx_hello(sender);
+                    return;
+                }
         }
+    }
+
+    void rx_hello(UInt32 player)
+    {
+        //TODO: Posljemo, samo ce smo zivi aka ingame
+        tx_spawn_player_single(player, Vector3.zero);
     }
 
     void rx_spawn_player(UInt32 player, Vector3 position)
     {
-        Debug.Log("rx spawn player: " + player + ", " + position);
+        GameObject net_player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        net_player.transform.position = position;
+
+        if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
+        { 
+            Destroy(network_players[player]);
+            network_players.Remove(player);
+        }
+
+        network_players.Add(player, net_player);
+
+        Debug.Log("Rx: spawn player: " + player + ", " + position);
     }
     void rx_destroy_player(UInt32 player)
     {
-        Debug.Log("rx destroy player: " + player);
+        if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
+        {
+            Destroy(network_players[player]);
+            network_players.Remove(player);
+        }
+        
+        Debug.Log("Rx: destroy player: " + player);
     }
 
     void rx_move_player(UInt32 player, Vector3 position, Quaternion rotation)
     {
-        Debug.Log("rx move player: " + player + ", " + position + ", " + rotation);
+        if (!network_players.ContainsKey(player))
+            return;
+
+        //TODO interpolacija
+        network_players[player].transform.position = position;
+        network_players[player].transform.rotation = rotation;
+
+        //Debug.Log("rx move player: " + player + ", " + position + ", " + rotation);
     }
 
     void on_connected(UInt32 id)
     {
+        tx_hello(0);
         Debug.Log("Connected. id: " + id);
     }
     void on_disconnected()
     {
+        foreach(UInt32 key in network_players.Keys)
+        {
+            Destroy(network_players[key]);
+        }
+        network_players.Clear();
+
         Debug.Log("Disconnected.");
     }
 
@@ -143,20 +223,35 @@ public class NetworkManager : MonoBehaviour
                 NetworkClient.connect("192.168.2.133", on_connected, on_disconnected, on_raw_msg);
     }
 
-    float last_heartbeat = 0;
+    float last_update = 0;
     private void Update()
     {
+        NetworkClient.update();
+        
         //send heartbeats
         if(NetworkClient.is_connected())
         {
-            NetworkClient.update();
-            if(Time.time - last_heartbeat > 0.1f)
+            //Tule posljemo vse paketke in omejimo na idk 20 ali pa 40 Hz
+            float time = Time.time;
+
+            if(time - last_update > (1.0f / 20))
             {
-                last_heartbeat = Time.time;
+                last_update = time;
+                while (messages.Count > 0)
+                {
+                    NetworkMessage msg = messages.Dequeue();
+                    NetworkClient.send(msg.target, msg.data);
+                }
+                //posebej za move
+                NetworkClient.send(move_message.target, move_message.data);
+            }
+
+            if (time - last_update > 0.2f)
+            {
+                last_update = time;
                 NetworkClient.send(1000, null);
             }
         }
-
     }
 
 
