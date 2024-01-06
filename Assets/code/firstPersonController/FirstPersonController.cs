@@ -44,6 +44,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private Transform _bodyTransform;
     private Transform _cameraTransform;
     private Rigidbody _rigidbody;
+    private NetworkManager _network_manager;
 
     private bool _isGrounded;
     private float _gravitySpeed;
@@ -65,6 +66,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _bodyTransform = bodyObject.transform;
         _cameraTransform = cameraObject.transform;
         _rigidbody = GetComponent<Rigidbody>();
+        _network_manager = NetworkManager.game_object.GetComponent<NetworkManager>();
         
         HUDManager.Instance.UpdateHealth(Health);
     }
@@ -76,6 +78,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         Shoot();
         Reload();
         Zipline();
+
+        _network_manager.tx_move_player(_rootTransform.position, _rootTransform.rotation);
     }
 
     private void UpdateRotation() {
