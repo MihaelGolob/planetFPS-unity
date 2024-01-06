@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 using Matrix4x4 = UnityEngine.Matrix4x4;
 using Quaternion = UnityEngine.Quaternion;
@@ -27,6 +28,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     
     [Header("Shooting")]
     [SerializeField] private WeaponBase weapon;
+    [SerializeField] private FullScreenDamageController damageEffectController;
 
     [Header("Gravity")] 
     [SerializeField] private IsGroundedComponent isGroundedComponent;
@@ -200,5 +202,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     public void TakeDamage(int damage) {
         Health -= damage;
         HUDManager.Instance.UpdateHealth(Health);
+        damageEffectController.TakeDamage();
     }
 }

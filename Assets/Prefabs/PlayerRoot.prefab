@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8570272240717941203}
   - component: {fileID: 8672332741258752205}
+  - component: {fileID: 960291810159618581}
   - component: {fileID: 3142030123918443441}
   - component: {fileID: 8045494195975887244}
   m_Layer: 0
@@ -57,8 +58,27 @@ MonoBehaviour:
   upDownAngleRotation: {x: -85, y: 75}
   jumpHeight: 4
   weapon: {fileID: 2092113688104482271}
+  damageEffectController: {fileID: 960291810159618581}
   isGroundedComponent: {fileID: 9075180532325619646}
   gravityAcceleration: 9.8
+--- !u!114 &960291810159618581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724334843661441698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63be27266b3ebb41872a32c527ee239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageEffect: {fileID: -1550882489674822739, guid: c40be3174f62c4acf8c1216858c64956,
+    type: 2}
+  damageEffectMaterial: {fileID: 2100000, guid: c5c2a7cac543101488b65b88b9cd5d99,
+    type: 2}
+  displayTime: 0.4
+  fadeOutTime: 0.7
 --- !u!136 &3142030123918443441
 CapsuleCollider:
   m_ObjectHideFlags: 0

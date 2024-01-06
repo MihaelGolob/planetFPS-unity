@@ -32769,6 +32769,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 960291810159618581, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: fadeOutTime
+      value: 0.378
+      objectReference: {fileID: 0}
     - target: {fileID: 4614758529727070695, guid: 3e366695edd922841a7717a9dd558a49,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -32778,6 +32783,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 1.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 5427169596294586973, guid: 3e366695edd922841a7717a9dd558a49,
+        type: 3}
+      propertyPath: m_RendererIndex
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 6352063352275206414, guid: 3e366695edd922841a7717a9dd558a49,
         type: 3}
