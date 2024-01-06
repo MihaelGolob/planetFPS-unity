@@ -40,10 +40,28 @@ public abstract class WeaponBase : MonoBehaviour {
     private readonly int _gunDownParameter = Animator.StringToHash("GunDown");
     private readonly int _gunUpParameter = Animator.StringToHash("GunUp");
 
+    //Networking
+    private NetworkManager _network_manager;
+
     private void Start() {
         _shootCooldown = 1 / shootingFrequency;
         _animator = GetComponent<Animator>();
         _bulletsLeft = magazineSize;
+
+        _network_manager = NetworkManager.game_object.GetComponent<NetworkManager>();
+    }
+
+    //Tule sem zacasno locu kreiranje metka, da lahko to poklicem preko networka. Zankrat deluje tako, da ko dobimo net msg, da je treba ustvarit metek,
+    //si "sposodim" komponento od lokalnega igralca, da ustvarim metek. Amapak takrat mu ne sme znizati ammo, pregledovati rate of fire ... , zato
+    //sem malo razbil tole funkcijo...
+    //Popravi, ce mas cas, tj. Naredi neko staticno fcijo za generiranje metkov ali kaj takega...
+
+
+    public void CreateBullet(Vector3 pos, Vector3 dir)
+    {
+        var bulletObject = Instantiate(bulletPrefab, pos, Quaternion.identity);
+        var bullet = bulletObject.GetComponent<Bullet>();
+        bullet.Init(dir, bulletSpeed, bulletDamage, bulletLifetime);
     }
 
     public virtual void Shoot(Vector3 direction, Vector3 shootPosition) {
@@ -59,9 +77,8 @@ public abstract class WeaponBase : MonoBehaviour {
         _lastShootTime = Time.time;
         _animator.SetTrigger(_shootParameter);
         
-        var bulletObject = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
-        var bullet = bulletObject.GetComponent<Bullet>();
-        bullet.Init(direction, bulletSpeed, bulletDamage, bulletLifetime);
+        CreateBullet(bulletSpawnPoint.position, direction);
+        _network_manager.tx_spawn_bullet(bulletSpawnPoint.position, direction);
 
         _bulletsLeft = Mathf.Clamp(_bulletsLeft - 1, 0, magazineSize);
         // effects

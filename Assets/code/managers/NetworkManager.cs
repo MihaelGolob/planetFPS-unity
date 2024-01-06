@@ -7,13 +7,15 @@ using UnityEngine;
 using System.Threading;
 using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public enum MsgFormat
 {
     DestroyPlayer = 1,
     SpawnPlayer,
     MovePlayer,
-    Hello
+    Hello,
+    SpawnBullet
 }
 
 class NetworkMessage
@@ -27,13 +29,28 @@ class NetworkMessage
     }
 }
 
+class NetworkPlayerData
+{
+    public GameObject g = null;
+    public Coroutine move_coroutine = null;
+    public UInt32 id = 0;
+
+    public NetworkPlayerData(UInt32 id,  GameObject g)
+    {
+        this.id = id;
+        this.g = g;
+    }
+}
+
 public class NetworkManager : MonoBehaviour
 {
+    public GameObject EnemyPrefab;
+
+    public static readonly float send_frequency = 20;
     public static GameObject game_object;
     Queue<NetworkMessage> messages = new Queue<NetworkMessage>(100);
     NetworkMessage move_message = new NetworkMessage(1000, null);
-
-    Dictionary<UInt32, GameObject> network_players = new Dictionary<uint, GameObject>(20);
+    Dictionary<UInt32, NetworkPlayerData> network_players = new Dictionary<uint, NetworkPlayerData>(20);
 
     void tx_spawn_player_single(UInt32 target, Vector3 position) {
         byte[] packet = new byte[sizeof(UInt32) + 3*sizeof(float)];
@@ -104,10 +121,29 @@ public class NetworkManager : MonoBehaviour
         messages.Enqueue(new NetworkMessage(target, packet));
     }
 
+    public void tx_spawn_bullet(Vector3 pos, Vector3 dir)
+    {
+        byte[] packet = new byte[sizeof(UInt32) + 6 * sizeof(float)];
+        MemoryStream memStream = new MemoryStream(packet);
+        BinaryWriter binWriter = new BinaryWriter(memStream);
+
+        binWriter.Write((UInt32)MsgFormat.SpawnBullet);
+        binWriter.Write(pos.x);
+        binWriter.Write(pos.y);
+        binWriter.Write(pos.z);
+
+        binWriter.Write(dir.x);
+        binWriter.Write(dir.y);
+        binWriter.Write(dir.z);
+        binWriter.Flush();
+
+        messages.Enqueue(new NetworkMessage(0, packet));
+    }
+
     Vector3 parse_vec3(byte[] packet, int offset)
     {
         return new Vector3(
-            BitConverter.ToSingle(packet, offset + 0*sizeof(float)),
+            BitConverter.ToSingle(packet, offset + 0 * sizeof(float)),
             BitConverter.ToSingle(packet, offset + 1 * sizeof(float)),
             BitConverter.ToSingle(packet, offset + 2 * sizeof(float))
         );
@@ -153,6 +189,13 @@ public class NetworkManager : MonoBehaviour
                     rx_hello(sender);
                     return;
                 }
+            case MsgFormat.SpawnBullet:
+                {
+                    Vector3 pos = parse_vec3(packet, 16);
+                    Vector3 dir = parse_vec3(packet, 28);
+                    rx_spawn_bullet(pos, dir);
+                    return;
+                }
         }
     }
 
@@ -162,18 +205,32 @@ public class NetworkManager : MonoBehaviour
         tx_spawn_player_single(player, Vector3.zero);
     }
 
+    void safeStopCoroutine(Coroutine routine)
+    {
+        if (routine == null)
+            return;
+        StopCoroutine(routine);
+    }
+
+    void rx_spawn_bullet(Vector3 pos, Vector3 dir)
+    {
+        //TODO, Tole je zacasno ...
+        GameObject.Find("gunYellow").GetComponent<WeaponNormal>().CreateBullet(pos, dir);
+    }
+
     void rx_spawn_player(UInt32 player, Vector3 position)
     {
-        GameObject net_player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        GameObject net_player = GameObject.Instantiate(EnemyPrefab);
         net_player.transform.position = position;
 
         if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
-        { 
-            Destroy(network_players[player]);
+        {
+            safeStopCoroutine(network_players[player].move_coroutine);
+            Destroy(network_players[player].g);
             network_players.Remove(player);
         }
 
-        network_players.Add(player, net_player);
+        network_players.Add(player, new NetworkPlayerData(player, net_player));
 
         Debug.Log("Rx: spawn player: " + player + ", " + position);
     }
@@ -181,11 +238,27 @@ public class NetworkManager : MonoBehaviour
     {
         if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
         {
-            Destroy(network_players[player]);
+            safeStopCoroutine(network_players[player].move_coroutine);
+            Destroy(network_players[player].g);
             network_players.Remove(player);
         }
         
         Debug.Log("Rx: destroy player: " + player);
+    }
+
+    IEnumerator move_player_smooth(GameObject g, Vector3 start_pos, Quaternion start_rot, Vector3 end_pos, Quaternion end_rot)
+    {
+        float t = 0;
+        float full_t = (1.0f / send_frequency);
+        while (t < full_t)
+        {
+            t += Time.deltaTime;
+            float p = t / full_t;
+
+            g.transform.position = Vector3.LerpUnclamped(start_pos, end_pos, p);
+            g.transform.rotation = Quaternion.Lerp(start_rot, end_rot, p);
+            yield return null;
+        }
     }
 
     void rx_move_player(UInt32 player, Vector3 position, Quaternion rotation)
@@ -193,11 +266,8 @@ public class NetworkManager : MonoBehaviour
         if (!network_players.ContainsKey(player))
             return;
 
-        //TODO interpolacija
-        network_players[player].transform.position = position;
-        network_players[player].transform.rotation = rotation;
-
-        //Debug.Log("rx move player: " + player + ", " + position + ", " + rotation);
+        safeStopCoroutine(network_players[player].move_coroutine);
+        network_players[player].move_coroutine = StartCoroutine(move_player_smooth(network_players[player].g, network_players[player].g.transform.position, network_players[player].g.transform.rotation, position, rotation));
     }
 
     void on_connected(UInt32 id)
@@ -209,18 +279,49 @@ public class NetworkManager : MonoBehaviour
     {
         foreach(UInt32 key in network_players.Keys)
         {
-            Destroy(network_players[key]);
+            StopCoroutine(network_players[key].move_coroutine);
+            Destroy(network_players[key].g);
         }
         network_players.Clear();
 
         Debug.Log("Disconnected.");
     }
 
+
+    System.String ip = "192.168.2.133";
+    bool connecting = false;
+    void threaded_connect()
+    {
+        connecting = true;
+
+        NetworkClient.connect(ip, on_connected, on_disconnected, on_raw_msg);
+
+        connecting = false;
+    }
     private void OnGUI()
     {
-        if(!NetworkClient.is_connected())
-            if(GUILayout.Button("Connect"))
-                NetworkClient.connect("192.168.2.133", on_connected, on_disconnected, on_raw_msg);
+        if(connecting)
+        {
+            GUILayout.Label("Connecting ...");
+        }else
+        {
+            if (!NetworkClient.is_connected())
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("IP");
+                ip = GUILayout.TextField(ip);
+                GUILayout.EndHorizontal();
+                if (GUILayout.Button("Connect"))
+                {
+                    connecting = true;
+                    Thread thread = new Thread(new ThreadStart(threaded_connect));
+                    thread.Start();
+                }
+            }else
+            {
+                GUILayout.Label("Connected");
+            }
+        }
     }
 
     float last_update = 0;
@@ -313,7 +414,7 @@ static class NetworkClient
         //tu zdej cakamo na prvi (server) msg
         msg_callback = client_get_id_msg;
 
-        int retries = 20;
+        int retries = 5;
         while (!is_connected())
         {
             update_nocheck();
