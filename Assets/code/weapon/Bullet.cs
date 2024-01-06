@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour {
     // parameters
     private float _speed;
     private float _lifetime;
-    private float _damage;
+    private int _damage;
     
     // private variables
     private bool _isInitialized;
@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour {
     private Rigidbody _rb;
     private MeshRenderer _meshRenderer;
 
-    public void Init(Vector3 direction, float speed, float damage, float lifetime) {
+    public void Init(Vector3 direction, float speed, int damage, float lifetime) {
         _speed = speed;
         _lifetime = lifetime;
         _damage = damage;

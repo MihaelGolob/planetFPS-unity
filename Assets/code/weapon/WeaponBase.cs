@@ -12,7 +12,7 @@ public abstract class WeaponBase : MonoBehaviour {
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float bulletLifetime;
     [SerializeField] private float shootingFrequency;
-    [SerializeField] private float bulletDamage;
+    [SerializeField] private int bulletDamage;
     [SerializeField] private int magazineSize;
     [SerializeField] private float reloadTime;
     
@@ -68,6 +68,7 @@ public abstract class WeaponBase : MonoBehaviour {
         AudioSystem.Instance.PlaySound(shootAudioCollection, shootPosition);
         muzzleFlash.Play();
         StartCoroutine(ShowLight());
+        HUDManager.Instance.UpdateAmmoCount(_bulletsLeft);
     }
     
     public void Reload() {
@@ -87,6 +88,7 @@ public abstract class WeaponBase : MonoBehaviour {
         _animator.SetTrigger(_gunUpParameter);
         _bulletsLeft = magazineSize;
         _reloadInProgress = false;
+        HUDManager.Instance.UpdateAmmoCount(_bulletsLeft);
     }
 
     private IEnumerator ShowLight() {

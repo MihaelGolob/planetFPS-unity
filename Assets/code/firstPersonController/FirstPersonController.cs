@@ -35,7 +35,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private Vector3 _gravitySource;
     
     // public members
-    public float Health { get; private set; } = 100f;
+    public int Health { get; private set; } = 100;
     
     // private variables
     private Transform _rootTransform;
@@ -63,6 +63,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _bodyTransform = bodyObject.transform;
         _cameraTransform = cameraObject.transform;
         _rigidbody = GetComponent<Rigidbody>();
+        
+        HUDManager.Instance.UpdateHealth(Health);
     }
     
     public void Update() {
@@ -195,7 +197,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         }
     }
 
-    public void TakeDamage(float damage) {
+    public void TakeDamage(int damage) {
         Health -= damage;
+        HUDManager.Instance.UpdateHealth(Health);
     }
 }
