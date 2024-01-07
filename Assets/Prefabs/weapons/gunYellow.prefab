@@ -106,7 +106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 2392175189532798469, guid: 63c0b022037bbc34f8b25506bc963610,
     type: 3}
-  bulletSpawnPoint: {fileID: 2913208474601270654}
+  bulletSpawnPoint: {fileID: 0}
+  initialVelocityFactor: 0.6
   bulletSpeed: 15
   bulletLifetime: 10
   shootingFrequency: 5
@@ -153,7 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2913208474601270654}
   m_Layer: 0
-  m_Name: bulletSpawnPoint
+  m_Name: gunEndPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
