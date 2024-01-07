@@ -9,6 +9,7 @@ public abstract class WeaponBase : MonoBehaviour {
     [SerializeField] private Transform bulletSpawnPoint;
     
     [Header("Weapon parameters")]
+    [SerializeField] private float initialVelocityFactor = 0.6f;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float bulletLifetime;
     [SerializeField] private float shootingFrequency;
@@ -57,14 +58,14 @@ public abstract class WeaponBase : MonoBehaviour {
     //Popravi, ce mas cas, tj. Naredi neko staticno fcijo za generiranje metkov ali kaj takega...
 
 
-    public void CreateBullet(Vector3 pos, Vector3 dir)
+    public void CreateBullet(Vector3 pos, Vector3 velocity)
     {
         var bulletObject = Instantiate(bulletPrefab, pos, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();
-        bullet.Init(dir, bulletSpeed, bulletDamage, bulletLifetime);
+        bullet.Init(velocity, bulletDamage, bulletLifetime);
     }
 
-    public virtual void Shoot(Vector3 direction, Vector3 shootPosition) {
+    public virtual void Shoot(Vector3 initial_velocity, Vector3 direction, Vector3 shootPosition) {
         if (Time.time - _lastShootTime < _shootCooldown) return;
         if (_reloadInProgress) return;
         
@@ -76,9 +77,11 @@ public abstract class WeaponBase : MonoBehaviour {
         
         _lastShootTime = Time.time;
         _animator.SetTrigger(_shootParameter);
-        
-        CreateBullet(bulletSpawnPoint.position, direction);
-        _network_manager.tx_spawn_bullet(bulletSpawnPoint.position, direction);
+
+        Vector3 velocity = initial_velocity * initialVelocityFactor + bulletSpeed * direction;
+
+        CreateBullet(bulletSpawnPoint.position, velocity);
+        _network_manager.tx_spawn_bullet(bulletSpawnPoint.position, velocity);
 
         _bulletsLeft = Mathf.Clamp(_bulletsLeft - 1, 0, magazineSize);
         // effects

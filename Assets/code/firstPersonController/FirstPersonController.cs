@@ -53,13 +53,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private bool _canZipline;
     private Collider _ziplineEnterCollider;
     private Zipline _activeZipline;
-    private bool _isZiplining;
+    public bool _isZiplining { get; private set; } = false;
     
-    // key tracking
-    private Dictionary<KeyCode, short> _keysDictionary = new();
-    private readonly List<KeyCode> _keysToTrack = new() {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Space, KeyCode.E, KeyCode.R};
     private Vector3 _lastMousePosition;
     private float _cameraAngle;
+    private Vector3 prev_pos = Vector3.zero;
+    public Vector3 player_velocity { get; private set; } = Vector3.zero;
 
     private void Start() {
         _rootTransform = rootObject.transform;
@@ -72,10 +71,16 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         HUDManager.Instance.UpdateHealth(Health);
     }
     
+    void CalculateVelocity()
+    {
+        player_velocity = (_cameraTransform.position - prev_pos) * Time.deltaTime * 2000;
+        prev_pos = _cameraTransform.position;
+    }
+
     public void Update() {
-        UpdateKeys();
         UpdateRotation();
         UpdateMovement();
+        CalculateVelocity();
         Shoot();
         Reload();
         Zipline();
@@ -96,10 +101,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     private void UpdateMovement() {
         if (_isZiplining) return;
-        
+
         Vector3 moveDir =
-            _bodyTransform.forward * (_keysDictionary[KeyCode.W] - _keysDictionary[KeyCode.S]) +
-            _bodyTransform.right * (_keysDictionary[KeyCode.D] - _keysDictionary[KeyCode.A]);
+            _bodyTransform.forward * Input.GetAxis("Vertical") +
+            _bodyTransform.right * Input.GetAxis("Horizontal");
 
         if (moveDir.magnitude != 0)
             moveDir = moveDir.normalized;
@@ -125,7 +130,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         {
             _gravitySpeed = 0;
 
-            if (_keysDictionary[KeyCode.Space] > 0)
+            if (Input.GetKey(KeyCode.Space))
             {
                 _gravitySpeed = jumpHeight;
             }
@@ -141,7 +146,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     private void Shoot() {
         if (Input.GetMouseButton(0)) {
-            weapon.Shoot(_cameraTransform.forward, transform.position);
+            //ne, ker tole ne uposteva ziplina
+            //weapon.Shoot(_rigidbody.velocity, _cameraTransform.forward, transform.position);
+            weapon.Shoot(player_velocity, _cameraTransform.forward, transform.position);
+
         }
     }
     
@@ -185,22 +193,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
             _canZipline = false;
             _ziplineEnterCollider = null;
             _activeZipline = null;
-        }
-    }
-
-    private void UpdateKeys() {
-        if (!_keysDictionary.ContainsKey(_keysToTrack[0])) {
-            foreach (var key in _keysToTrack) {
-                _keysDictionary.Add(key, 0);
-            }
-        }
-        
-        foreach(var key in _keysToTrack) {
-            if (Input.GetKeyDown(key)) {
-                _keysDictionary[key] = 1;
-            } else if (Input.GetKeyUp(key)) {
-                _keysDictionary[key] = 0;
-            }
         }
     }
 

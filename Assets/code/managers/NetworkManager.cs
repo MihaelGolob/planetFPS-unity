@@ -121,7 +121,7 @@ public class NetworkManager : MonoBehaviour
         messages.Enqueue(new NetworkMessage(target, packet));
     }
 
-    public void tx_spawn_bullet(Vector3 pos, Vector3 dir)
+    public void tx_spawn_bullet(Vector3 pos, Vector3 velocity)
     {
         byte[] packet = new byte[sizeof(UInt32) + 6 * sizeof(float)];
         MemoryStream memStream = new MemoryStream(packet);
@@ -132,9 +132,9 @@ public class NetworkManager : MonoBehaviour
         binWriter.Write(pos.y);
         binWriter.Write(pos.z);
 
-        binWriter.Write(dir.x);
-        binWriter.Write(dir.y);
-        binWriter.Write(dir.z);
+        binWriter.Write(velocity.x);
+        binWriter.Write(velocity.y);
+        binWriter.Write(velocity.z);
         binWriter.Flush();
 
         messages.Enqueue(new NetworkMessage(0, packet));
@@ -192,8 +192,8 @@ public class NetworkManager : MonoBehaviour
             case MsgFormat.SpawnBullet:
                 {
                     Vector3 pos = parse_vec3(packet, 16);
-                    Vector3 dir = parse_vec3(packet, 28);
-                    rx_spawn_bullet(pos, dir);
+                    Vector3 velocity = parse_vec3(packet, 28);
+                    rx_spawn_bullet(pos, velocity);
                     return;
                 }
         }
@@ -212,10 +212,10 @@ public class NetworkManager : MonoBehaviour
         StopCoroutine(routine);
     }
 
-    void rx_spawn_bullet(Vector3 pos, Vector3 dir)
+    void rx_spawn_bullet(Vector3 pos, Vector3 velocity)
     {
         //TODO, Tole je zacasno ...
-        GameObject.Find("gunYellow").GetComponent<WeaponNormal>().CreateBullet(pos, dir);
+        GameObject.Find("gunYellow").GetComponent<WeaponNormal>().CreateBullet(pos, velocity);
     }
 
     void rx_spawn_player(UInt32 player, Vector3 position)

@@ -6,7 +6,6 @@ public class Bullet : MonoBehaviour {
     [SerializeField] private VisualEffect bulletImpact;
     
     // parameters
-    private float _speed;
     private float _lifetime;
     private int _damage;
     
@@ -21,14 +20,13 @@ public class Bullet : MonoBehaviour {
     private Rigidbody _rb;
     private MeshRenderer _meshRenderer;
 
-    public void Init(Vector3 direction, float speed, int damage, float lifetime) {
-        _speed = speed;
+    public void Init(Vector3 velocity, int damage, float lifetime) {
         _lifetime = lifetime;
         _damage = damage;
         
         _isInitialized = true;
         _rb = GetComponent<Rigidbody>();
-        _rb.velocity = direction * speed;
+        _rb.velocity = velocity;
         _meshRenderer = GetComponent<MeshRenderer>();
     }
 
