@@ -45,6 +45,11 @@ class NetworkPlayerData
 public class NetworkManager : ManagerBase 
 {
     public GameObject EnemyPrefab;
+    public delegate void ConnectedCallback();
+    public delegate void DisconnectedCallback();
+
+    public static ConnectedCallback connected_callback = null;
+    public static DisconnectedCallback disconnectedCallback = null;
 
     public static readonly float send_frequency = 20;
     public static GameObject game_object;
@@ -221,6 +226,7 @@ public class NetworkManager : ManagerBase
     void rx_spawn_player(UInt32 player, Vector3 position)
     {
         GameObject net_player = GameObject.Instantiate(EnemyPrefab);
+        DontDestroyOnLoad(net_player);
         net_player.transform.position = position;
 
         if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
@@ -284,6 +290,7 @@ public class NetworkManager : ManagerBase
         }
         network_players.Clear();
 
+
         Debug.Log("Disconnected.");
     }
 
@@ -298,6 +305,21 @@ public class NetworkManager : ManagerBase
 
         connecting = false;
     }
+
+    public void Connect(System.String _ip)
+    {
+        ip = _ip;
+        if(!connecting && !NetworkClient.is_connected())
+        {
+            Debug.Log("Connecting.");
+            
+            connecting = true;
+            Thread thread = new Thread(new ThreadStart(threaded_connect));
+            thread.Start();
+        }
+    }
+
+
     private void OnGUI()
     {
         if(connecting)
@@ -307,6 +329,7 @@ public class NetworkManager : ManagerBase
         {
             if (!NetworkClient.is_connected())
             {
+                /*
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("IP");
                 ip = GUILayout.TextField(ip);
@@ -317,16 +340,36 @@ public class NetworkManager : ManagerBase
                     Thread thread = new Thread(new ThreadStart(threaded_connect));
                     thread.Start();
                 }
-            }else
+                */
+                GUILayout.Label("Disconnected");
+            }
+            else
             {
                 GUILayout.Label("Connected");
             }
         }
     }
+    
 
     float last_update = 0;
+    bool prevConnected = false;
     private void Update()
     {
+        //More bit tako zaradi sinhronizacije threadov
+        if(NetworkClient.is_connected() != prevConnected)
+        {
+            prevConnected = NetworkClient.is_connected();
+            if(prevConnected)
+            {
+                if (connected_callback != null)
+                    connected_callback();
+            }else
+            {
+                if (disconnectedCallback != null)
+                    disconnectedCallback();
+            }
+        }
+
         NetworkClient.update();
         
         //send heartbeats
@@ -335,7 +378,7 @@ public class NetworkManager : ManagerBase
             //Tule posljemo vse paketke in omejimo na idk 20 ali pa 40 Hz
             float time = Time.time;
 
-            if(time - last_update > (1.0f / 20))
+            if(time - last_update > (1.0f / send_frequency))
             {
                 last_update = time;
                 while (messages.Count > 0)
