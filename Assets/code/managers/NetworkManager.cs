@@ -42,7 +42,7 @@ class NetworkPlayerData
     }
 }
 
-public class NetworkManager : MonoBehaviour
+public class NetworkManager : ManagerBase 
 {
     public GameObject EnemyPrefab;
 

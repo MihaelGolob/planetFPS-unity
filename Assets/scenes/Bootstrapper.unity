@@ -155,6 +155,7 @@ MonoBehaviour:
   managers:
   - {fileID: 7247484052875642281, guid: 1870a111c7ea29d4b9f8855c9e1c2462, type: 3}
   - {fileID: 1329562123781833192, guid: 97f3de95d52617f4db0d11e8adab02f1, type: 3}
+  - {fileID: 2981738925625942596, guid: 73a5f519d490ac34ebcfc90be7de61a0, type: 3}
   sceneName: MainMenu
 --- !u!4 &1629116659
 Transform:
