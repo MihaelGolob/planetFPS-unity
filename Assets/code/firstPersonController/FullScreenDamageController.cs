@@ -12,13 +12,19 @@ public class FullScreenDamageController : MonoBehaviour {
     // private
     private int _vignetteIntensityId = Shader.PropertyToID("_VignetteIntensity");
     private float _vignetteIntensity = 1.7f;
+    
+    private Coroutine _damageCoroutine;
 
     private void Start() {
         damageEffect.SetActive(false);
     }
 
     public void TakeDamage() {
-        StartCoroutine(TakeDamageInternal());
+        if (_damageCoroutine != null) {
+            StopCoroutine(_damageCoroutine);
+        }
+        
+        _damageCoroutine = StartCoroutine(TakeDamageInternal());
     }
 
     private IEnumerator TakeDamageInternal() {
