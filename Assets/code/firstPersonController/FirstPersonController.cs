@@ -1,11 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
-using Matrix4x4 = UnityEngine.Matrix4x4;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 
@@ -85,7 +80,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         Reload();
         Zipline();
 
-        _network_manager.tx_move_player(_rootTransform.position, _rootTransform.rotation);
+        _network_manager.tx_move_player(_rootTransform.position, _bodyTransform.rotation);
     }
 
     private void UpdateRotation() {
