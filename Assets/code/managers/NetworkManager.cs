@@ -308,10 +308,11 @@ public class NetworkManager : ManagerBase
 
     public void Connect(System.String _ip)
     {
+        
         ip = _ip;
         if(!connecting && !NetworkClient.is_connected())
         {
-            Debug.Log("Connecting.");
+            Debug.Log($"Connecting to: '{_ip}'");
             
             connecting = true;
             Thread thread = new Thread(new ThreadStart(threaded_connect));
