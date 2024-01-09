@@ -195,5 +195,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         Health -= damage;
         HUDManager.Instance.UpdateHealth(Health);
         damageEffectController.TakeDamage();
+        
+        if (Health <= 0) {
+            Die();
+        }
+    }
+
+    private void Die() {
+        
     }
 }

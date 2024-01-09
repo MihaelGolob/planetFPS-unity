@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class CursorLock : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
+public class CursorLock : MonoBehaviour {
+    void Start() {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        if (EventSystem.current.IsPointerOverGameObject()) {
+            return;
+        }
+        
         if(Input.GetKey(KeyCode.Escape))
             Cursor.lockState = CursorLockMode.None;
         if(Input.GetButton("Fire1"))

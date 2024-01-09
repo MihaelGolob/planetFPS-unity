@@ -27,6 +27,14 @@ public class FullScreenDamageController : MonoBehaviour {
         _damageCoroutine = StartCoroutine(TakeDamageInternal());
     }
 
+    public void StopEffect() {
+        if (_damageCoroutine != null) {
+            StopCoroutine(_damageCoroutine);
+        }
+        
+        damageEffect.SetActive(false); 
+    }
+
     private IEnumerator TakeDamageInternal() {
         damageEffect.SetActive(true);
         damageEffectMaterial.SetFloat(_vignetteIntensityId, _vignetteIntensity);

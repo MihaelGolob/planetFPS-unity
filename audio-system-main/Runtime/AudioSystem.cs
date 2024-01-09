@@ -396,6 +396,19 @@ public class AudioSystem : MonoBehaviour {
         mixerGroup.audioMixer.SetFloat($"{mixerGroup.name}Volume", volume);
     }
 
+    public float GetGroupVolume(string group) {
+        if (!_mixerGroups.TryGetValue(group, out var mixerGroup)) {
+            Debug.LogError("AudioSystem: Invalid mixer group name");
+            return -1f;
+        }
+        // set attenuation of the mixer group
+        mixerGroup.audioMixer.GetFloat($"{mixerGroup.name}Volume", out var volume);
+        // map volume from -80-0 to 0-1
+        volume = Mathf.InverseLerp(-80, 0, volume);
+        
+        return volume;
+    }
+
     /// <summary>
     /// Sets the volume of a sound with the specified id.
     /// </summary>
