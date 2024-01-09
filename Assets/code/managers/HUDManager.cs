@@ -16,7 +16,6 @@ public class HUDManager : ManagerBase {
         }
     }
     
-    
     // inspector assigned
     [Header("UI elements")] 
     [SerializeField] private TMP_Text ammoCountText;
@@ -26,10 +25,12 @@ public class HUDManager : ManagerBase {
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject soundOn;
     [SerializeField] private GameObject soundOff;
+    [Header("Death menu")]
+    [SerializeField] private GameObject deathMenu;
     
     // private
     NetworkManager _networkManager;
-    public bool IsPauseMenuEnabled => pauseMenu.activeSelf;
+    public bool IsPauseMenuEnabled => pauseMenu.activeSelf || deathMenu.activeSelf;
 
     private void Start() {
         var volume = AudioSystem.Instance.GetGroupVolume("Master");
@@ -56,6 +57,19 @@ public class HUDManager : ManagerBase {
     public void ExitToMainMenu() {
         _networkManager.Disconnect();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    public void OnRespawnButton() {
+        GameManager.Instance.RespawnPlayer();
+        EnableDeathMenu(false);
+    }
+    
+    public void EnableDeathMenu(bool enable) {
+        deathMenu.SetActive(enable);
+        if (enable) {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
     
     public void ToggleSound(bool isOn) {

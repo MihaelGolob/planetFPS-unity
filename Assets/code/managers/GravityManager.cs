@@ -41,4 +41,8 @@ public class GravityManager : ManagerBase{
 
         return gravity;
     } 
+    
+    public List<GravitySource> GetGravitySources() {
+        return _gravitySources;
+    }
 }

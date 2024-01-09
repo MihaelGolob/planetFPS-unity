@@ -204,7 +204,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         }
     }
 
+    public void Respawn(Vector3 position) {
+        _rootTransform.position = position;
+        Health = 100;
+        HUDManager.Instance.UpdateHealth(Health);
+    }
+
     private void Die() {
-        
+        HUDManager.Instance.EnableDeathMenu(true);
     }
 }
