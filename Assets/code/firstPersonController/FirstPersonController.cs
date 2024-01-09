@@ -68,7 +68,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     
     void CalculateVelocity()
     {
-        player_velocity = (_cameraTransform.position - prev_pos) * Time.deltaTime * 2000;
+        player_velocity = (_cameraTransform.position - prev_pos) * (Time.deltaTime * 2000);
         prev_pos = _cameraTransform.position;
     }
 

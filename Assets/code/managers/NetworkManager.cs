@@ -174,33 +174,33 @@ public class NetworkManager : ManagerBase
         switch ((MsgFormat)format)
         {
             case MsgFormat.SpawnPlayer:
-                {
-                    Vector3 pos = parse_vec3(packet, 16);
-                    rx_spawn_player(sender, pos);
-                    return;
-                }
+            {
+                Vector3 pos = parse_vec3(packet, 16);
+                rx_spawn_player(sender, pos);
+                return;
+            }
             case MsgFormat.DestroyPlayer:
                 rx_destroy_player(sender);
                 return;
             case MsgFormat.MovePlayer:
-                {
-                    Vector3 pos = parse_vec3(packet, 16);
-                    Quaternion rot = parse_quat(packet, 28);
-                    rx_move_player(sender, pos, rot);
-                    return;
-                }
+            {
+                Vector3 pos = parse_vec3(packet, 16);
+                Quaternion rot = parse_quat(packet, 28);
+                rx_move_player(sender, pos, rot);
+                return;
+            }
             case MsgFormat.Hello:
-                {
-                    rx_hello(sender);
-                    return;
-                }
+            {
+                rx_hello(sender);
+                return;
+            }
             case MsgFormat.SpawnBullet:
-                {
-                    Vector3 pos = parse_vec3(packet, 16);
-                    Vector3 velocity = parse_vec3(packet, 28);
-                    rx_spawn_bullet(pos, velocity);
-                    return;
-                }
+            {
+                Vector3 pos = parse_vec3(packet, 16);
+                Vector3 velocity = parse_vec3(packet, 28);
+                rx_spawn_bullet(pos, velocity);
+                return;
+            }
         }
     }
 
@@ -242,7 +242,7 @@ public class NetworkManager : ManagerBase
     }
     void rx_destroy_player(UInt32 player)
     {
-        if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
+        if (network_players.ContainsKey(player))
         {
             safeStopCoroutine(network_players[player].move_coroutine);
             Destroy(network_players[player].g);
@@ -320,6 +320,9 @@ public class NetworkManager : ManagerBase
         }
     }
 
+    public void Disconnect() {
+        NetworkClient.disconnect();
+    }
 
     private void OnGUI()
     {

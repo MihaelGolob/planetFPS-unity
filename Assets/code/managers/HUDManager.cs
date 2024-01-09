@@ -9,8 +9,6 @@ public class HUDManager : ManagerBase {
     public static HUDManager Instance { get; private set; }
     
     protected override void Awake() {
-        base.Awake();
-        
         if (Instance != null && Instance != this) {
             Destroy(this);
         } else {
@@ -18,12 +16,6 @@ public class HUDManager : ManagerBase {
         }
     }
     
-    public bool IsPauseMenuEnabled => pauseMenu.activeSelf;
-
-    private void Start() {
-        var volume = AudioSystem.Instance.GetGroupVolume("Master");
-        ToggleSound(volume > 0f);
-    }
     
     // inspector assigned
     [Header("UI elements")] 
@@ -34,6 +26,16 @@ public class HUDManager : ManagerBase {
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject soundOn;
     [SerializeField] private GameObject soundOff;
+    
+    // private
+    NetworkManager _networkManager;
+    public bool IsPauseMenuEnabled => pauseMenu.activeSelf;
+
+    private void Start() {
+        var volume = AudioSystem.Instance.GetGroupVolume("Master");
+        ToggleSound(volume > 0f);
+        _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
+    }
 
     public void UpdateAmmoCount(int ammo) {
         ammoCountText.text = ammo.ToString();
@@ -49,6 +51,11 @@ public class HUDManager : ManagerBase {
 
     public void EnablePauseMenu(bool enable) {
         pauseMenu.SetActive(enable);
+    }
+    
+    public void ExitToMainMenu() {
+        _networkManager.Disconnect();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
     
     public void ToggleSound(bool isOn) {
