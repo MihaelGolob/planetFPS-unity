@@ -17,6 +17,8 @@ public class HUDManager : ManagerBase {
             Instance = this;
         }
     }
+    
+    public bool IsPauseMenuEnabled => pauseMenu.activeSelf;
 
     private void Start() {
         var volume = AudioSystem.Instance.GetGroupVolume("Master");

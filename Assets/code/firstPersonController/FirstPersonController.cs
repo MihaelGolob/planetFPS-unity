@@ -73,12 +73,15 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     public void Update() {
-        UpdateRotation();
-        UpdateMovement();
+        // input functions
+        if (!HUDManager.Instance.IsPauseMenuEnabled) {
+            UpdateRotation();
+            UpdateMovement();
+            Shoot();
+            Reload();
+            Zipline();
+        }
         CalculateVelocity();
-        Shoot();
-        Reload();
-        Zipline();
 
         _network_manager.tx_move_player(_rootTransform.position, _bodyTransform.rotation);
     }
