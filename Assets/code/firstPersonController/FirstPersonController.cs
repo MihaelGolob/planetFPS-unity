@@ -16,10 +16,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [SerializeField] private float mouseSensitivity = 5.0f;
 
     [Header("Movement parameters")] 
-    [SerializeField] private float moveSpeed;
+    [SerializeField] public float moveSpeed;
     [SerializeField] private float airSpeed;
     [SerializeField] private Vector2 upDownAngleRotation = new Vector2(-90.0f, 90.0f);
-    [SerializeField] private float jumpHeight = 5;
+    [SerializeField] public float jumpHeight = 5;
     
     [Header("Shooting")]
     [SerializeField] private WeaponBase weapon;

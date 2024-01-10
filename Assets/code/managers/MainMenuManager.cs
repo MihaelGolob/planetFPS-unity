@@ -52,6 +52,7 @@ public class MainMenuManager : MonoBehaviour {
     public void OnConnected()
     {
         SceneManager.LoadScene(gameSceneName);
+        PowerUpManager.Instance.StartSpawning();
     }
 
 }
