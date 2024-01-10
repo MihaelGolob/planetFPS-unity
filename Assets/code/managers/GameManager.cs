@@ -26,7 +26,7 @@ public class GameManager : ManagerBase {
     
     public void RespawnPlayer() {
         if (_player == null) {
-            _player = GameObject.FindWithTag("Player").GetComponent<FirstPersonController>();
+            _player = FindObjectOfType<FirstPersonController>();
         }
         
         _networkManager.tx_destroy_player();

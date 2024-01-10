@@ -48,6 +48,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private bool _canZipline;
     private Collider _ziplineEnterCollider;
     private Zipline _activeZipline;
+    private bool _isDead;
     public bool _isZiplining { get; private set; } = false;
     
     private Vector3 _lastMousePosition;
@@ -195,11 +196,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     public void TakeDamage(int damage) {
-        Health -= damage;
+        Health = Mathf.Clamp(Health - damage, 0, 100);
         HUDManager.Instance.UpdateHealth(Health);
         damageEffectController.TakeDamage();
         
-        if (Health <= 0) {
+        
+        if (Health <= 0 && !_isDead) {
+            _isDead = true;
             Die();
         }
     }
