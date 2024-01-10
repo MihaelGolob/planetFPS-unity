@@ -26,7 +26,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [SerializeField] private FullScreenDamageController damageEffectController;
 
     [Header("Gravity")] 
-    [SerializeField] private IsGroundedComponent isGroundedComponent;
     [SerializeField] private float gravityAcceleration = 9.8f;
     
     private Vector3 _gravitySource;
@@ -41,7 +40,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private Rigidbody _rigidbody;
     private NetworkManager _network_manager;
 
-    private bool _isGrounded;
+	public bool isGrounded { private set; get; } = false;
     private float _gravitySpeed;
     private float _lastJumpTime;
 
@@ -108,9 +107,15 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         if (moveDir.magnitude != 0)
             moveDir = moveDir.normalized;
 
-        _isGrounded = isGroundedComponent.isGrounded;
+        //isGrounded = isGroundedComponent.isGrounded;
+		//isGrounded = true;
+		RaycastHit hit;
 
-        var speed = _isGrounded ? moveSpeed : airSpeed;
+		if(Physics.SphereCast(_rootTransform.position + _rootTransform.up, 0.25f, -_rootTransform.up, out hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
+			isGrounded = hit.distance <= 1.0f;
+		}
+			
+        var speed = isGrounded ? moveSpeed : airSpeed;
         //moveDir *= speed * Time.deltaTime;
 		moveDir *= speed; //Ne smemo mnozit z deltaTime, ker ze rigidbody sam to naredi...
 	
@@ -126,7 +131,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _rootTransform.rotation = gravityRotation * _rootTransform.rotation;
 
         // apply gravity
-        if (_isGrounded && _gravitySpeed <= 0)
+        if (isGrounded && _gravitySpeed <= 0)
         {
             _gravitySpeed = 0;
 

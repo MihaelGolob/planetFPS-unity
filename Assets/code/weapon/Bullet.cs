@@ -64,11 +64,6 @@ public class Bullet : MonoBehaviour {
         var damageable = other.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
 
-		if(damageable != null)
-			Debug.Log ("Hit damagable: " + other.gameObject.name);
-		else
-			Debug.Log ("Hit non damagable: " + other.gameObject.name);
-		
         bulletExplode();
     }
 }

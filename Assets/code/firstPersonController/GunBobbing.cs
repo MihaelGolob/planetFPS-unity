@@ -5,8 +5,6 @@ using UnityEngine;
 public class GunBobbing : MonoBehaviour
 {
     [SerializeField] FirstPersonController fps_controller;
-    [SerializeField] IsGroundedComponent isGroundedComponent;
-
     [SerializeField] float transition_factor = 0.5f;
     [SerializeField] float bob_speed = 0.5f;
     [SerializeField] float bob_amplitude = 0.5f;
@@ -25,7 +23,7 @@ public class GunBobbing : MonoBehaviour
         transform.localPosition = Vector3.Lerp(transform.localPosition, target_pos, transition_factor);
         
         float player_velocity_mag = fps_controller.player_velocity.magnitude;
-        if (player_velocity_mag > 0.02f && isGroundedComponent.isGrounded)
+		if (player_velocity_mag > 0.02f && fps_controller.isGrounded)
         {
             p += bob_speed;
             while (p >= 2 * Mathf.PI)
