@@ -226,7 +226,8 @@ public class NetworkManager : ManagerBase
     void rx_hello(UInt32 player)
     {
         //TODO: Posljemo, samo ce smo zivi aka ingame
-        tx_spawn_player_single(player, Vector3.zero);
+		if(!FindObjectOfType<FirstPersonController>().isDead)
+        	tx_spawn_player_single(player, Vector3.zero);
     }
 
     void safeStopCoroutine(Coroutine routine)
@@ -239,8 +240,8 @@ public class NetworkManager : ManagerBase
     void rx_spawn_bullet(Vector3 pos, Vector3 velocity)
     {
         //TODO, Tole je zacasno ...
-        GameObject.Find("gunYellow").GetComponent<WeaponNormal>().CreateBullet(pos, velocity);
-    }
+		FindObjectOfType<WeaponNormal>().CreateBullet(pos, velocity);
+	}
 
     void rx_spawn_player(UInt32 player, Vector3 position)
     {
@@ -377,6 +378,21 @@ public class NetworkManager : ManagerBase
         }
     }
     
+	bool sending = false;
+	void threaded_send()
+	{
+		sending = true;
+
+		while (messages.Count > 0)
+		{
+			NetworkMessage msg = messages.Dequeue();
+			NetworkClient.send(msg.target, msg.data);
+		}
+		//posebej za move
+		NetworkClient.send(move_message.target, move_message.data);
+
+		sending = false;
+	}
 
     float last_update = 0;
     bool prevConnected = false;
@@ -403,24 +419,13 @@ public class NetworkManager : ManagerBase
         if(NetworkClient.is_connected())
         {
             //Tule posljemo vse paketke in omejimo na idk 20 ali pa 40 Hz
-            float time = Time.time;
-
-            if(time - last_update > (1.0f / send_frequency))
+			float time = Time.time;
+			if(!sending && (time - last_update > (1.0f / send_frequency)))
             {
-                last_update = time;
-                while (messages.Count > 0)
-                {
-                    NetworkMessage msg = messages.Dequeue();
-                    NetworkClient.send(msg.target, msg.data);
-                }
-                //posebej za move
-                NetworkClient.send(move_message.target, move_message.data);
-            }
-
-            if (time - last_update > 0.2f)
-            {
-                last_update = time;
-                NetworkClient.send(1000, null);
+				sending = true;
+				last_update = time;
+				Thread thread = new Thread(new ThreadStart(threaded_send));
+				thread.Start();
             }
         }
     }
@@ -437,8 +442,7 @@ public class NetworkManager : ManagerBase
     }
 
 }
-
-
+	
 static class NetworkClient
 {
     static readonly int rx_buffer_size = 1024;

@@ -23,7 +23,7 @@ public class GameManager : ManagerBase {
     private void Start() {
         _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
     }
-    
+
     public void RespawnPlayer() {
         if (_player == null) {
             _player = FindObjectOfType<FirstPersonController>();

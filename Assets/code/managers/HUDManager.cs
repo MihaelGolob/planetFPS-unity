@@ -37,6 +37,17 @@ public class HUDManager : ManagerBase {
         ToggleSound(volume > 0f);
         _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
     }
+		
+	private void OnEnable()
+	{
+		NetworkManager.disconnectedCallback = ExitToMainMenu;
+	}
+
+	private void OnDisable()
+	{
+		NetworkManager.disconnectedCallback = null;
+	}
+
 
     public void UpdateAmmoCount(int ammo) {
         ammoCountText.text = ammo.ToString();

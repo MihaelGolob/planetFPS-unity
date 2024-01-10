@@ -11,22 +11,22 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private string gameSceneName;
 
     NetworkManager networkManager;
+	System.String serverIp = "127.0.0.1";
 
     private void OnEnable()
     {
         networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
         NetworkManager.connected_callback = OnConnected;
-        NetworkManager.disconnectedCallback = OnDisconnected;
     }
     
     private void OnDisable()
     {
         NetworkManager.connected_callback = null;
-        NetworkManager.disconnectedCallback = null;
     }
 
-    private void Start() {
-        // use web request to fetch server IP
+    private void Start() { //To bi se moglo zagnati za vsako, ko gremo v main menu, oz. ip bi se mogu za vsako nastavit.
+
+		// use web request to fetch server IP
         StartCoroutine(GetRequest("https://benjaminlipnik.eu/public/pages/planet_runner/?servers"));
     }
 
@@ -35,7 +35,7 @@ public class MainMenuManager : MonoBehaviour {
         yield return webRequest.SendWebRequest();
 
         if (webRequest.result == UnityWebRequest.Result.Success) {
-            var serverIp = webRequest.downloadHandler.text;
+            serverIp = webRequest.downloadHandler.text;
             // remove new lines
             serverIp = Regex.Replace(serverIp, @"\t|\n|\r", "");
             IpInputField.text = serverIp;
@@ -52,12 +52,6 @@ public class MainMenuManager : MonoBehaviour {
     public void OnConnected()
     {
         SceneManager.LoadScene(gameSceneName);
-    }
-    public void OnDisconnected()
-    {
-        //i guess da to to ne bo nikoli poklicalo, ker se tale gameobject zbrise ko nalozimo game sceno.
-
-        //Nazaj v main menu, igralce ze trenutno pobrise network manager
     }
 
 }

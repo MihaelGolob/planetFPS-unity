@@ -18,7 +18,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [Header("Movement parameters")] 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float airSpeed;
-    [SerializeField] private Vector2 upDownAngleRotation = new (-85f, 75f);
+    [SerializeField] private Vector2 upDownAngleRotation = new Vector2(-90.0f, 90.0f);
     [SerializeField] private float jumpHeight = 5;
     
     [Header("Shooting")]
@@ -47,8 +47,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private bool _canZipline;
     private Collider _ziplineEnterCollider;
     private Zipline _activeZipline;
-    private bool _isDead;
-    public bool _isZiplining { get; private set; } = false;
+	public bool isDead { get; private set; } = false;
+    public bool isZiplining { get; private set; } = false;
     
     private Vector3 _lastMousePosition;
     private float _cameraAngle;
@@ -98,7 +98,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void UpdateMovement() {
-        if (_isZiplining) return;
+        if (isZiplining) return;
 
         Vector3 moveDir =
             _bodyTransform.forward * Input.GetAxis("Vertical") +
@@ -111,7 +111,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 		//isGrounded = true;
 		RaycastHit hit;
 
-		if(Physics.SphereCast(_rootTransform.position + _rootTransform.up, 0.25f, -_rootTransform.up, out hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
+		if(Physics.SphereCast(_rootTransform.position + _rootTransform.up * 1.25f, 0.25f, -_rootTransform.up, out hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
 			isGrounded = hit.distance <= 1.0f;
 		}
 			
@@ -162,10 +162,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void Zipline() {
-        if (!_canZipline || _isZiplining) return;
+        if (!_canZipline || isZiplining) return;
         
         if (Input.GetKeyDown(KeyCode.E)) {
-            _isZiplining = true;
+            isZiplining = true;
             var info = _activeZipline.GetZiplineInfo(_ziplineEnterCollider);
             StartCoroutine(ZiplineInterpolation((info.start, info.end, info.speed)));
         }
@@ -179,7 +179,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
             yield return null;
         }
         
-        _isZiplining = false;
+        isZiplining = false;
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -204,8 +204,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         damageEffectController.TakeDamage();
         
         
-        if (Health <= 0 && !_isDead) {
-            _isDead = true;
+        if (Health <= 0 && !isDead) {
+            isDead = true;
             Die();
         }
     }
@@ -214,7 +214,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _rootTransform.position = position;
         Health = 100;
         HUDManager.Instance.UpdateHealth(Health);
-		_isDead = false;
+		isDead = false;
     }
 
     private void Die() {
