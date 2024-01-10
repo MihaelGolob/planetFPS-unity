@@ -212,6 +212,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _rootTransform.position = position;
         Health = 100;
         HUDManager.Instance.UpdateHealth(Health);
+		_isDead = false;
     }
 
     private void Die() {
