@@ -111,8 +111,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _isGrounded = isGroundedComponent.isGrounded;
 
         var speed = _isGrounded ? moveSpeed : airSpeed;
-        moveDir *= speed * Time.deltaTime;
-
+        //moveDir *= speed * Time.deltaTime;
+		moveDir *= speed; //Ne smemo mnozit z deltaTime, ker ze rigidbody sam to naredi...
+	
         _rigidbody.velocity = moveDir;
 
         // set source
