@@ -62,7 +62,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _cameraTransform = cameraObject.transform;
         _rigidbody = GetComponent<Rigidbody>();
         _network_manager = NetworkManager.game_object.GetComponent<NetworkManager>();
-        _network_manager.tx_spawn_player(_rootTransform.position);
+        _network_manager.tx_spawn_player(_rootTransform.position); // To je sicer delo game Managerja ...
         
         HUDManager.Instance.UpdateHealth(Health);
     }
@@ -146,10 +146,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     private void Shoot() {
         if (Input.GetMouseButton(0)) {
-            //ne, ker tole ne uposteva ziplina
-            //weapon.Shoot(_rigidbody.velocity, _cameraTransform.forward, transform.position);
             weapon.Shoot(player_velocity, _cameraTransform.forward, transform.position);
-
         }
     }
     
@@ -216,6 +213,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void Die() {
+		_network_manager.tx_die(); //ti bi lahko dodali die msg, ki zaigra death animacijo na ostalih clientih.
         HUDManager.Instance.EnableDeathMenu(true);
     }
 }

@@ -15,7 +15,8 @@ public enum MsgFormat
     SpawnPlayer,
     MovePlayer,
     Hello,
-    SpawnBullet
+    SpawnBullet,
+	Die
 }
 
 class NetworkMessage
@@ -58,6 +59,9 @@ public class NetworkManager : ManagerBase
     Dictionary<UInt32, NetworkPlayerData> network_players = new Dictionary<uint, NetworkPlayerData>(20);
 
     void tx_spawn_player_single(UInt32 target, Vector3 position) {
+		if (!NetworkClient.is_connected ())
+			return;
+
         byte[] packet = new byte[sizeof(UInt32) + 3*sizeof(float)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
@@ -77,20 +81,26 @@ public class NetworkManager : ManagerBase
         tx_spawn_player_single(0, position);
     }
 
-    public void tx_destroy_player() {
+	public void tx_die() {
+		if (!NetworkClient.is_connected ())
+			return;
+
         byte[] packet = new byte[sizeof(UInt32)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
 
-        binWriter.Write((UInt32)MsgFormat.DestroyPlayer);
+		binWriter.Write((UInt32)MsgFormat.Die);
         binWriter.Flush();
 
         //broadcast
         //NetworkClient.send(0, packet);
-        messages.Equals(new NetworkMessage(0, packet));
+		messages.Enqueue(new NetworkMessage(0, packet));
     }
     public void tx_move_player(Vector3 position, Quaternion rotation)
     {
+		if (!NetworkClient.is_connected ())
+			return;
+
         byte[] packet = new byte[sizeof(UInt32) + 7 * sizeof(float)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
@@ -114,6 +124,9 @@ public class NetworkManager : ManagerBase
 
     void tx_hello(UInt32 target) //like tx spawn player, but not broadcast
     {
+		if (!NetworkClient.is_connected ())
+			return;
+
         byte[] packet = new byte[sizeof(UInt32) + 3 * sizeof(float)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
@@ -121,13 +134,14 @@ public class NetworkManager : ManagerBase
         binWriter.Write((UInt32)MsgFormat.Hello);
         binWriter.Flush();
 
-        //broadcast
-        //NetworkClient.send(0, packet);
         messages.Enqueue(new NetworkMessage(target, packet));
     }
 
     public void tx_spawn_bullet(Vector3 pos, Vector3 velocity)
     {
+		if (!NetworkClient.is_connected ())
+			return;
+
         byte[] packet = new byte[sizeof(UInt32) + 6 * sizeof(float)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
@@ -201,6 +215,11 @@ public class NetworkManager : ManagerBase
                 rx_spawn_bullet(pos, velocity);
                 return;
             }
+			case MsgFormat.Die:
+			{
+				rx_die (sender);
+				return;
+			}
         }
     }
 
@@ -240,6 +259,10 @@ public class NetworkManager : ManagerBase
 
         Debug.Log("Rx: spawn player: " + player + ", " + position);
     }
+	void rx_die(UInt32 player) {
+		//za enkrat se nimamo nic, lahko pa tule predvajamo die animacijo...
+		rx_destroy_player(player);
+	}
     void rx_destroy_player(UInt32 player)
     {
         if (network_players.ContainsKey(player))
@@ -295,7 +318,7 @@ public class NetworkManager : ManagerBase
     }
 
 
-    System.String ip = "192.168.2.133";
+    System.String ip = "127.0.0.1";
     bool connecting = false;
     void threaded_connect()
     {

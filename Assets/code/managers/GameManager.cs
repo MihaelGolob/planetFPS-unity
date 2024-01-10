@@ -29,7 +29,6 @@ public class GameManager : ManagerBase {
             _player = FindObjectOfType<FirstPersonController>();
         }
         
-        _networkManager.tx_destroy_player();
         var position = GetRandomSpawnPosition();
         _player.Respawn(position);
         _networkManager.tx_spawn_player(position);
