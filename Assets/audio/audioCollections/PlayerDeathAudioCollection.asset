@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e50880d18ab4389b43959efee62eb2d, type: 3}
+  m_Name: PlayerDeathAudioCollection
+  m_EditorClassIdentifier: 
+  _audioGroup: Effects
+  _volume: 1
+  _spatialBlend: 1
+  _priority: 128
+  _playOrder: 1
+  _loop: 0
+  _stopOnSceneChange: 1
+  _audioClips:
+  - {fileID: 8300000, guid: b3bb7099a0a0d2e4aab69cacc05d7b21, type: 3}
+  - {fileID: 8300000, guid: ac0f83d138527b74ba4d74747f7f6a9c, type: 3}
+  - {fileID: 8300000, guid: a8c1fba5b6b794f4b9d8cbc2610be54d, type: 3}
+  - {fileID: 8300000, guid: 3c5c5862f90f6144ebca4313d970f58d, type: 3}
+  - {fileID: 8300000, guid: a32029bba882d3e4ebf81de2650eedab, type: 3}
+  - {fileID: 8300000, guid: 3bca7e565d026434eb618dd7a2560fd3, type: 3}
+  - {fileID: 8300000, guid: fec74e97457a0134fab55dd733b1a3ad, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PistolShootAudioCollection
   m_EditorClassIdentifier: 
   _audioGroup: Effects
-  _volume: 1
+  _volume: 0.7
   _spatialBlend: 1
   _priority: 128
   _playOrder: 1

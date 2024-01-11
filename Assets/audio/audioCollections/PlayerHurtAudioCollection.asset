@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e50880d18ab4389b43959efee62eb2d, type: 3}
+  m_Name: PlayerHurtAudioCollection
+  m_EditorClassIdentifier: 
+  _audioGroup: Effects
+  _volume: 1
+  _spatialBlend: 1
+  _priority: 128
+  _playOrder: 1
+  _loop: 0
+  _stopOnSceneChange: 1
+  _audioClips:
+  - {fileID: 8300000, guid: f109a37ddf0836c419ab35e76628db2a, type: 3}
+  - {fileID: 8300000, guid: c3e8697caf86d2b4c88c2b437bc7faa4, type: 3}
+  - {fileID: 8300000, guid: c6d0dbe68aec8174faf571aa31db4927, type: 3}
+  - {fileID: 8300000, guid: 03a69bdefbeadbb439b219015937532b, type: 3}
+  - {fileID: 8300000, guid: 570e122b26f1ff64395076e3a14b05f5, type: 3}
+  - {fileID: 8300000, guid: 28dd05372fbd5c346ba13dd2e7e801fa, type: 3}
+  - {fileID: 8300000, guid: 8a165c0c9822a68469c169baf7e34419, type: 3}
+  - {fileID: 8300000, guid: fff86069720d8f6458a3707cf413143a, type: 3}
+  - {fileID: 8300000, guid: 23beff0b5106c624da031c040cc0c4ee, type: 3}

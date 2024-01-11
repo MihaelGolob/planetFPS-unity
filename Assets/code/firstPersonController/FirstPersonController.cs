@@ -1,4 +1,5 @@
 using System.Collections;
+using Ineor.Utils.AudioSystem;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using Quaternion = UnityEngine.Quaternion;
@@ -27,6 +28,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 
     [Header("Gravity")] 
     [SerializeField] private float gravityAcceleration = 9.8f;
+    
+    [Header("Audio Collections")]
+    [SerializeField] private AudioCollection hurtAudioCollection;
+    [SerializeField] private AudioCollection deathAudioCollection;
     
     private Vector3 _gravitySource;
     
@@ -202,7 +207,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         Health = Mathf.Clamp(Health - damage, 0, 100);
         HUDManager.Instance.UpdateHealth(Health);
         damageEffectController.TakeDamage();
-        
+        AudioSystem.Instance.PlaySound(hurtAudioCollection, transform.position);
         
         if (Health <= 0 && !isDead) {
             isDead = true;
@@ -213,12 +218,14 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     public void Respawn(Vector3 position) {
         _rootTransform.position = position;
         Health = 100;
+        weapon.InstantReload();
         HUDManager.Instance.UpdateHealth(Health);
 		isDead = false;
     }
 
     private void Die() {
 		_network_manager.tx_die(); //ti bi lahko dodali die msg, ki zaigra death animacijo na ostalih clientih.
+        AudioSystem.Instance.PlaySound(deathAudioCollection, transform.position);
         HUDManager.Instance.EnableDeathMenu(true);
     }
 }

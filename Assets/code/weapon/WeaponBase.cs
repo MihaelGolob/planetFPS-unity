@@ -98,6 +98,11 @@ public abstract class WeaponBase : MonoBehaviour {
         StartCoroutine(ReloadInternal());
     }
 
+    public void InstantReload() {
+        _bulletsLeft = magazineSize;
+        HUDManager.Instance.UpdateAmmoCount(_bulletsLeft);
+    }
+
     private IEnumerator ReloadInternal() {
         AudioSystem.Instance.PlaySound(reloadAudioCollection, transform.position);
         _animator.SetTrigger(_gunDownParameter);

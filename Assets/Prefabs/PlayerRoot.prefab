@@ -59,6 +59,10 @@ MonoBehaviour:
   weapon: {fileID: 2092113688104482271}
   damageEffectController: {fileID: 960291810159618581}
   gravityAcceleration: 9.8
+  hurtAudioCollection: {fileID: 11400000, guid: 05f6ee17dc576a740bfe2421b310e485,
+    type: 2}
+  deathAudioCollection: {fileID: 11400000, guid: 47e6f013ad17eec469f1ca36d1d41c80,
+    type: 2}
 --- !u!114 &960291810159618581
 MonoBehaviour:
   m_ObjectHideFlags: 0
