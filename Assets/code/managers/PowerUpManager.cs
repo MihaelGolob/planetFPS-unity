@@ -54,6 +54,7 @@ public class PowerUpManager : ManagerBase
 
     public void SpawnPowerup(Vector3 pos, Quaternion rot, int index)
     {
+        Debug.Log("Spawned pwoerup from network");
         Instantiate(powerupPrefabs[index], pos, rot);
     }
     
