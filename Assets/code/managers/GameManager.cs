@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : ManagerBase {
     // singleton pattern
@@ -16,12 +18,24 @@ public class GameManager : ManagerBase {
         }
     }
     
+    // inspector assigned
+    [SerializeField] private GameObject enemyPrefab;
+    
     // private
     private NetworkManager _networkManager;
     private FirstPersonController _player;
     
+    private Queue<(Vector3, Action<GameObject>)> _enemySpawnQueue = new ();
+    
     private void Start() {
         _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
+    }
+
+    private void Update() {
+        if (_enemySpawnQueue.Count > 0) {
+            var (position, onSpawned) = _enemySpawnQueue.Dequeue();
+            SpawnEnemy(position, onSpawned);
+        }
     }
 
     public void RespawnPlayer() {
@@ -32,6 +46,21 @@ public class GameManager : ManagerBase {
         var position = GetRandomSpawnPosition();
         _player.Respawn(position);
         _networkManager.tx_spawn_player(position);
+    }
+
+    public void QueueSpawnEnemy(Vector3 position, Action<GameObject> onSpawned) {
+        // check if you are in game scene
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Game") {
+            _enemySpawnQueue.Enqueue((position, onSpawned));
+            return;
+        }
+        
+        SpawnEnemy(position, onSpawned);
+    }
+    
+    private void SpawnEnemy(Vector3 position, Action<GameObject> onSpawned) {
+        var enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+        onSpawned?.Invoke(enemy);
     }
     
     private Vector3 GetRandomSpawnPosition() {

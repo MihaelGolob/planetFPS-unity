@@ -284,18 +284,9 @@ public class NetworkManager : ManagerBase
 
     void rx_spawn_player(UInt32 player, Vector3 position)
     {
-        GameObject net_player = GameObject.Instantiate(EnemyPrefab);
-        DontDestroyOnLoad(net_player);
-        net_player.transform.position = position;
-
-        if (network_players.ContainsKey(player)) //To se naceloma ne sme zgodit.
-        {
-            safeStopCoroutine(network_players[player].move_coroutine);
-            Destroy(network_players[player].g);
-            network_players.Remove(player);
-        }
-
-        network_players.Add(player, new NetworkPlayerData(player, net_player));
+        GameManager.Instance.QueueSpawnEnemy(position, (enemy) => {
+            network_players.Add(player, new NetworkPlayerData(player, enemy));
+        });
 
         Debug.Log("Rx: spawn player: " + player + ", " + position);
     }
