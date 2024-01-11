@@ -101,6 +101,8 @@ MonoBehaviour:
   powerupEffect: {fileID: 11400000, guid: c35cacf81451f1c4a8a5f6da8f500b3c, type: 2}
   duration: 5
   selfDestructTime: 30
+  pickupAudioCollection: {fileID: 11400000, guid: d2c98012cb051584593852b345e9f66a,
+    type: 2}
 --- !u!135 &8770276158270045857
 SphereCollider:
   m_ObjectHideFlags: 0
