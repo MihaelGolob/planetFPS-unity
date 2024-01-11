@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour {
     private Vector3 _oldPosition;
     private float _lastAnimationUpdateTime;
     private string _name;
+    private Camera _camera;
     
     // animator hashed parameters
     private readonly int _moveSpeedParameter = Animator.StringToHash("MoveSpeed");
@@ -22,10 +23,15 @@ public class EnemyController : MonoBehaviour {
     
     private void Start() {
         _animator = GetComponent<Animator>();
-        nameText.text = _name;
     }
 
     private void Update() {
+        nameText.transform.LookAt(transform.position + _camera.transform.rotation * Vector3.forward, _camera.transform.rotation * Vector3.up);
+        var textRotation = nameText.transform.localEulerAngles;
+        textRotation.x = 0;
+        textRotation.z = 0;
+        nameText.transform.localEulerAngles = textRotation;
+        
         if (Time.time - _lastAnimationUpdateTime < animationUpdateFrequency) {
             return;
         }
@@ -52,7 +58,10 @@ public class EnemyController : MonoBehaviour {
     }
 
     public void SetName(string name) {
-        nameText.text = name;
-        nameCanvas.worldCamera = Camera.main;
+        _name = name;
+        _camera = Camera.main;
+        
+        nameText.text = _name;
+        nameCanvas.worldCamera = _camera;
     }
 }
