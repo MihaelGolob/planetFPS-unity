@@ -24,7 +24,7 @@ public class PowerUpManager : ManagerBase
 
     public void StartSpawning()
     {
-        InvokeRepeating("SpawnPowerup", 20f, powerupSpawnRate);
+        InvokeRepeating("SpawnPowerup", 5f, powerupSpawnRate);
     }
 
     public void SpawnPowerup()

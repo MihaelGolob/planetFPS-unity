@@ -31,7 +31,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private Vector3 _gravitySource;
     
     // public members
-    public int Health { get; private set; } = 100;
+    public int Health { get; set; } = 100;
     
     // private variables
     private Transform _rootTransform;

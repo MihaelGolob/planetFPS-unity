@@ -13,16 +13,19 @@ public class Powerup : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        if (collision.CompareTag("Player"))
+        {
+            if (duration != -1)
+            {
+                PowerUpManager.Instance.HandlePowerUp(collision.gameObject,
+                    powerupEffect, duration);
+            }
+            else
+            {
+                powerupEffect.Apply(collision.gameObject);
+            }    
+        }
         Destroy(gameObject);
-        if (duration != -1)
-        {
-            PowerUpManager.Instance.HandlePowerUp(collision.gameObject,
-                                                    powerupEffect, duration);
-        }
-        else
-        {
-            powerupEffect.Apply(collision.gameObject);
-        }
     }
 
     public void Update()
