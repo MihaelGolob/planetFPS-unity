@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerupExistenceDuration: 20
   powerupPrefabs:
-  - {fileID: 4607645652831699359, guid: 5b881c4b0a3b2464c95b45df128d0f44, type: 3}
-  - {fileID: 2396431266963636925, guid: eda19ef4f03683c4988e724e6afd8497, type: 3}
-  - {fileID: 1885117177513604427, guid: 702d8121938a26242a2fb95992ce54f0, type: 3}
+  - {fileID: 6161747573232116749, guid: 0b6b527a4bd487e4ca6c0a0c153a95de, type: 3}
+  - {fileID: 413920920747880256, guid: cbdb943eb812da540a388d3b156c15e0, type: 3}
+  - {fileID: 7342737998588866926, guid: 22b43f6ec3013964d8210d054bc5ada9, type: 3}
   powerupSpawnRate: 10
