@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Sockets;
 using UnityEngine;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
@@ -16,7 +17,8 @@ public enum MsgFormat
     MovePlayer,
     Hello,
     SpawnBullet,
-	Die
+	Die,
+    SpawnPowerup,
 }
 
 class NetworkMessage
@@ -159,6 +161,30 @@ public class NetworkManager : ManagerBase
         messages.Enqueue(new NetworkMessage(0, packet));
     }
 
+    public void tx_spawn_powerup(Vector3 pos, Quaternion rotation, int index)
+    {
+        if (!NetworkClient.is_connected()) return;
+
+        byte[] packet = new byte[sizeof(UInt32) + sizeof(int) + 7 * sizeof(float)];
+        MemoryStream memStream = new MemoryStream(packet);
+        BinaryWriter binWriter = new BinaryWriter(memStream);
+        
+        binWriter.Write((UInt32)MsgFormat.SpawnPowerup);
+        
+        binWriter.Write((pos.x));
+        binWriter.Write((pos.y));
+        binWriter.Write((pos.z));
+        
+        binWriter.Write(rotation.x);
+        binWriter.Write(rotation.y);
+        binWriter.Write(rotation.z);
+        binWriter.Write(rotation.w);
+        
+        binWriter.Write(index);
+        
+        messages.Enqueue(new NetworkMessage(0, packet));
+    }
+
     Vector3 parse_vec3(byte[] packet, int offset)
     {
         return new Vector3(
@@ -220,6 +246,14 @@ public class NetworkManager : ManagerBase
 				rx_die (sender);
 				return;
 			}
+            case MsgFormat.SpawnPowerup:
+            {
+                Vector3 pos = parse_vec3(packet, 16);
+                Quaternion rot = parse_quat(packet, 28);
+                int index = BitConverter.ToInt32(packet, 44);
+                rx_spawn_powerup(pos, rot, index);
+                return;
+            }
         }
     }
 
@@ -242,6 +276,11 @@ public class NetworkManager : ManagerBase
         //TODO, Tole je zacasno ...
 		FindObjectOfType<WeaponNormal>().CreateBullet(pos, velocity);
 	}
+
+    void rx_spawn_powerup(Vector3 pos, Quaternion rot, int index)
+    {
+        PowerUpManager.Instance.SpawnPowerup(pos, rot, index);
+    }
 
     void rx_spawn_player(UInt32 player, Vector3 position)
     {

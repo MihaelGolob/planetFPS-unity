@@ -9,6 +9,8 @@ public class PowerUpManager : ManagerBase
     public GameObject[] powerupPrefabs;
     public float powerupSpawnRate = 5f;
 
+    private NetworkManager _networkManager;
+
     protected override void Awake()
     {
         base.Awake();
@@ -25,8 +27,9 @@ public class PowerUpManager : ManagerBase
     public void StartSpawning()
     {
         InvokeRepeating("SpawnPowerup", 5f, powerupSpawnRate);
+        _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
     }
-
+    
     public void SpawnPowerup()
     {
         int randomIndex = UnityEngine.Random.Range(0, powerupPrefabs.Length);
@@ -45,7 +48,13 @@ public class PowerUpManager : ManagerBase
         
         Debug.Log($"Spawning a powerup {randomIndex} at {randomPosition}");
 
-        GameObject powerup = Instantiate(powerupPrefabs[randomIndex], randomPosition, rotation);
+        var powerup = Instantiate(powerupPrefabs[randomIndex], randomPosition, rotation);
+        _networkManager.tx_spawn_powerup(randomPosition, rotation, randomIndex);
+    }
+
+    public void SpawnPowerup(Vector3 pos, Quaternion rot, int index)
+    {
+        Instantiate(powerupPrefabs[index], pos, rot);
     }
     
     public void HandlePowerUp(GameObject target, PowerupEffect effect, float duration)

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 442a0a4f77f6afb4f8bc5ffd086dc440, type: 3}
   m_Name: BigSpeedBuff
   m_EditorClassIdentifier: 
-  amount: 300
+  amount: 5

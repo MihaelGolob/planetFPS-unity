@@ -49,4 +49,4 @@ MonoBehaviour:
   - {fileID: 4607645652831699359, guid: 5b881c4b0a3b2464c95b45df128d0f44, type: 3}
   - {fileID: 2396431266963636925, guid: eda19ef4f03683c4988e724e6afd8497, type: 3}
   - {fileID: 1885117177513604427, guid: 702d8121938a26242a2fb95992ce54f0, type: 3}
-  powerupSpawnRate: 5
+  powerupSpawnRate: 10

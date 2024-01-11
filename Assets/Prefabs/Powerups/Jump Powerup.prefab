@@ -114,8 +114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989ecb80aa5881448b52ea7d4dd89d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerupEffect: {fileID: 0}
-  duration: -1
+  powerupEffect: {fileID: 11400000, guid: c35cacf81451f1c4a8a5f6da8f500b3c, type: 2}
+  duration: 5
 --- !u!135 &8945983115747302090
 SphereCollider:
   m_ObjectHideFlags: 0
