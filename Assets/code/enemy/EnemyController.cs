@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour {
+    [SerializeField] private Canvas nameCanvas;
+    [SerializeField] private TMP_Text nameText;
     [SerializeField] [Range(0.01f, 1f)] private float animationUpdateFrequency = 0.3f;
     
     // private variables
@@ -11,6 +14,7 @@ public class EnemyController : MonoBehaviour {
 
     private Vector3 _oldPosition;
     private float _lastAnimationUpdateTime;
+    private string _name;
     
     // animator hashed parameters
     private readonly int _moveSpeedParameter = Animator.StringToHash("MoveSpeed");
@@ -18,6 +22,7 @@ public class EnemyController : MonoBehaviour {
     
     private void Start() {
         _animator = GetComponent<Animator>();
+        nameText.text = _name;
     }
 
     private void Update() {
@@ -44,5 +49,10 @@ public class EnemyController : MonoBehaviour {
         }
         
         _oldPosition = position;
+    }
+
+    public void SetName(string name) {
+        nameText.text = name;
+        nameCanvas.worldCamera = Camera.main;
     }
 }

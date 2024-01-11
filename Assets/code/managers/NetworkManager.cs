@@ -284,7 +284,7 @@ public class NetworkManager : ManagerBase
 
     void rx_spawn_player(UInt32 player, Vector3 position)
     {
-        GameManager.Instance.QueueSpawnEnemy(position, (enemy) => {
+        GameManager.Instance.QueueSpawnEnemy($"Player{player}", position, (enemy) => {
             network_players.Add(player, new NetworkPlayerData(player, enemy));
         });
 

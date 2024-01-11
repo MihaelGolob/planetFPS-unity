@@ -25,7 +25,7 @@ public class GameManager : ManagerBase {
     private NetworkManager _networkManager;
     private FirstPersonController _player;
     
-    private Queue<(Vector3, Action<GameObject>)> _enemySpawnQueue = new ();
+    private Queue<(string, Vector3, Action<GameObject>)> _enemySpawnQueue = new ();
     
     private void Start() {
         _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
@@ -33,8 +33,8 @@ public class GameManager : ManagerBase {
 
     private void Update() {
         if (_enemySpawnQueue.Count > 0) {
-            var (position, onSpawned) = _enemySpawnQueue.Dequeue();
-            SpawnEnemy(position, onSpawned);
+            var (name, position, onSpawned) = _enemySpawnQueue.Dequeue();
+            SpawnEnemy(name, position, onSpawned);
         }
     }
 
@@ -48,18 +48,20 @@ public class GameManager : ManagerBase {
         _networkManager.tx_spawn_player(position);
     }
 
-    public void QueueSpawnEnemy(Vector3 position, Action<GameObject> onSpawned) {
+    public void QueueSpawnEnemy(String name, Vector3 position, Action<GameObject> onSpawned) {
         // check if you are in game scene
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Game") {
-            _enemySpawnQueue.Enqueue((position, onSpawned));
+            _enemySpawnQueue.Enqueue((name, position, onSpawned));
             return;
         }
         
-        SpawnEnemy(position, onSpawned);
+        SpawnEnemy(name, position, onSpawned);
     }
     
-    private void SpawnEnemy(Vector3 position, Action<GameObject> onSpawned) {
+    private void SpawnEnemy(string name, Vector3 position, Action<GameObject> onSpawned) {
         var enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+        var enemyComponent = enemy.GetComponent<EnemyController>();
+        enemyComponent.SetName(name);
         onSpawned?.Invoke(enemy);
     }
     
