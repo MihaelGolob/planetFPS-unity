@@ -46,15 +46,12 @@ public class PowerUpManager : ManagerBase
         var dirFromPlanet = (planetPosition - randomPosition).normalized;
         var rotation = Quaternion.FromToRotation(Vector3.up, -dirFromPlanet) * Quaternion.LookRotation(Vector3.forward);
         
-        Debug.Log($"Spawning a powerup {randomIndex} at {randomPosition}");
-
         var powerup = Instantiate(powerupPrefabs[randomIndex], randomPosition, rotation);
         _networkManager.tx_spawn_powerup(randomPosition, rotation, randomIndex);
     }
 
     public void SpawnPowerup(Vector3 pos, Quaternion rot, int index)
     {
-        Debug.Log("Spawned pwoerup from network");
         Instantiate(powerupPrefabs[index], pos, rot);
     }
     
