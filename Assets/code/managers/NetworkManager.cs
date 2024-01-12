@@ -142,12 +142,12 @@ public class NetworkManager : ManagerBase
         messages.Enqueue(new NetworkMessage(target, packet));
     }
 
-    public void tx_spawn_bullet(Vector3 pos, Vector3 velocity)
+    public void tx_spawn_bullet(Vector3 pos, Vector3 velocity, BulletType type)
     {
 		if (!NetworkClient.is_connected ())
 			return;
 
-        byte[] packet = new byte[sizeof(UInt32) + 6 * sizeof(float)];
+        byte[] packet = new byte[sizeof(UInt32) + 6 * sizeof(float) + sizeof(int)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
 
@@ -159,6 +159,8 @@ public class NetworkManager : ManagerBase
         binWriter.Write(velocity.x);
         binWriter.Write(velocity.y);
         binWriter.Write(velocity.z);
+        
+        binWriter.Write((int)type);
         binWriter.Flush();
 
         messages.Enqueue(new NetworkMessage(0, packet));
@@ -251,7 +253,8 @@ public class NetworkManager : ManagerBase
             {
                 Vector3 pos = parse_vec3(packet, 16);
                 Vector3 velocity = parse_vec3(packet, 28);
-                rx_spawn_bullet(pos, velocity);
+                BulletType type = (BulletType)BitConverter.ToInt32(packet, 40);
+                rx_spawn_bullet(pos, velocity, type);
                 return;
             }
 			case MsgFormat.Die:
@@ -284,10 +287,13 @@ public class NetworkManager : ManagerBase
         StopCoroutine(routine);
     }
 
-    void rx_spawn_bullet(Vector3 pos, Vector3 velocity)
+    void rx_spawn_bullet(Vector3 pos, Vector3 velocity, BulletType type)
     {
         //TODO, Tole je zacasno ...
-		FindObjectOfType<WeaponLaser>().CreateBullet(pos, velocity);
+        if (type == BulletType.Laser)
+            FindObjectOfType<WeaponLaser>().CreateBullet(pos, velocity);
+        else 
+            FindObjectOfType<WeaponNormal>().CreateBullet(pos, velocity);
 	}
 
     void rx_spawn_powerup(Vector3 pos, Quaternion rot, int index)

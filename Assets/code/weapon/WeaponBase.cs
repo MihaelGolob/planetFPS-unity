@@ -56,11 +56,13 @@ public abstract class WeaponBase : MonoBehaviour {
     //Popravi, ce mas cas, tj. Naredi neko staticno fcijo za generiranje metkov ali kaj takega...
 
 
-    public virtual void CreateBullet(Vector3 pos, Vector3 velocity)
+    public virtual Bullet CreateBullet(Vector3 pos, Vector3 velocity)
     {
         var bulletObject = Instantiate(bulletPrefab, pos, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();
         bullet.Init(velocity, bulletDamage, bulletLifetime);
+        
+        return bullet;
     }
 
     public virtual void Shoot(Vector3 initial_velocity, Vector3 direction, Vector3 shootPosition) {
@@ -78,8 +80,8 @@ public abstract class WeaponBase : MonoBehaviour {
 
         Vector3 velocity = initial_velocity * initialVelocityFactor + bulletSpeed * direction;
 
-        CreateBullet(bulletSpawnPoint.position, velocity);
-        _network_manager.tx_spawn_bullet(bulletSpawnPoint.position, velocity);
+        var bulletComponent = CreateBullet(bulletSpawnPoint.position, velocity);
+        _network_manager.tx_spawn_bullet(bulletSpawnPoint.position, velocity, bulletComponent.BulletType);
 
         _bulletsLeft = Mathf.Clamp(_bulletsLeft - 1, 0, magazineSize);
         // effects

@@ -182,6 +182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletImpact: {fileID: 4018198174604324126}
   meshRenderer: {fileID: 2037085423148942678}
+  bulletType: 1
 --- !u!2083052967 &4018198174604324126
 VisualEffect:
   m_ObjectHideFlags: 0

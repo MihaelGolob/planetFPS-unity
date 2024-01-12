@@ -2,9 +2,17 @@ using System;
 using UnityEngine;
 using UnityEngine.VFX;
 
+public enum BulletType {
+    Normal,
+    Laser
+}
+
 public class Bullet : MonoBehaviour {
     [SerializeField] private VisualEffect bulletImpact;
     [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private BulletType bulletType;
+    
+    public BulletType BulletType => bulletType;
     
     // parameters
     private float _lifetime;
@@ -62,10 +70,6 @@ public class Bullet : MonoBehaviour {
     
     private void OnCollisionEnter(Collision other) {
         if (!_isInitialized || _collision) return;
-
-        if (other.gameObject.CompareTag("Player")) {
-            return;
-        }
         
         var damageable = other.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
