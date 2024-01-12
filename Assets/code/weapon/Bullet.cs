@@ -60,6 +60,10 @@ public class Bullet : MonoBehaviour {
     
     private void OnCollisionEnter(Collision other) {
         if (!_isInitialized || _collision) return;
+
+        if (other.gameObject.CompareTag("Player")) {
+            return;
+        }
         
         var damageable = other.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
