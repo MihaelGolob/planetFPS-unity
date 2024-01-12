@@ -221,15 +221,19 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     public IEnumerator SwitchWeapons() {
         _isSwitching = true;
         _activeWeapon.LowerWeapon();
+        var otherWeapon = _activeWeapon == assaultRifleWeapon ? laserGunWeapon : assaultRifleWeapon;
+        otherWeapon.LowerWeapon();
         
         yield return new WaitForSeconds(weaponSwitchTime);
         
-        _activeWeapon.gameObject.SetActive(false);
-        _activeWeapon = _activeWeapon == assaultRifleWeapon ? laserGunWeapon : assaultRifleWeapon;
-        _activeWeapon.gameObject.SetActive(true);
-        
-        _activeWeapon.UpdateAmmoCount();
+        _activeWeapon.EnableMesh(false);
         _activeWeapon.RaiseWeapon();
+        
+        otherWeapon.EnableMesh(true);
+        otherWeapon.UpdateAmmoCount();
+        otherWeapon.RaiseWeapon();
+        
+        _activeWeapon = otherWeapon;
         _isSwitching = false;
     }
 

@@ -7,6 +7,8 @@ public abstract class WeaponBase : MonoBehaviour {
     [Header("basic")]
     [SerializeField] protected GameObject bulletPrefab;
     [SerializeField] protected Transform bulletSpawnPoint;
+    [SerializeField] protected Animator animator;
+    [SerializeField] protected MeshRenderer meshRenderer;
     
     [Header("Weapon parameters")]
     [SerializeField] protected float initialVelocityFactor = 0.6f;
@@ -33,9 +35,6 @@ public abstract class WeaponBase : MonoBehaviour {
     private int _bulletsLeft;
     private bool _reloadInProgress;
     
-    // private components
-    private Animator _animator;
-    
     // animator hashed parameters
     private readonly int _shootParameter = Animator.StringToHash("Shoot");
     private readonly int _gunDownParameter = Animator.StringToHash("GunDown");
@@ -46,7 +45,6 @@ public abstract class WeaponBase : MonoBehaviour {
 
     private void Start() {
         _shootCooldown = 1 / shootingFrequency;
-        _animator = GetComponent<Animator>();
         _bulletsLeft = magazineSize;
 
         _network_manager = NetworkManager.game_object.GetComponent<NetworkManager>();
@@ -76,7 +74,7 @@ public abstract class WeaponBase : MonoBehaviour {
         }
         
         _lastShootTime = Time.time;
-        _animator.SetTrigger(_shootParameter);
+        animator.SetTrigger(_shootParameter);
 
         Vector3 velocity = initial_velocity * initialVelocityFactor + bulletSpeed * direction;
 
@@ -108,21 +106,25 @@ public abstract class WeaponBase : MonoBehaviour {
     }
 
     public void LowerWeapon() {
-        _animator.SetTrigger(_gunDownParameter);
+        animator.SetTrigger(_gunDownParameter);
     }
     
     public void RaiseWeapon() {
-        _animator.SetTrigger(_gunUpParameter);
+        animator.SetTrigger(_gunUpParameter);
+    }
+
+    public void EnableMesh(bool enable) {
+        meshRenderer.enabled = enable;
     }
 
     private IEnumerator ReloadInternal() {
         AudioSystem.Instance.PlaySound(reloadAudioCollection, transform.position);
-        _animator.SetTrigger(_gunDownParameter);
+        animator.SetTrigger(_gunDownParameter);
         _reloadInProgress = true;
         
         yield return new WaitForSeconds(reloadTime);
         
-        _animator.SetTrigger(_gunUpParameter);
+        animator.SetTrigger(_gunUpParameter);
         _bulletsLeft = magazineSize;
         _reloadInProgress = false;
         HUDManager.Instance.UpdateAmmoCount(_bulletsLeft);

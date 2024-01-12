@@ -107,6 +107,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2392175189532798469, guid: d8b615d710aaea045912565b2d90a9c2,
     type: 3}
   bulletSpawnPoint: {fileID: 0}
+  animator: {fileID: 1143274336417912228}
+  meshRenderer: {fileID: 8933600610544780144}
   initialVelocityFactor: 1
   bulletSpeed: 50
   bulletLifetime: 10
