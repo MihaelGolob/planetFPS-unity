@@ -36,6 +36,9 @@ public class PowerUpManager : ManagerBase
 
         var planets = GravityManager.Instance.GetGravitySources();
         var planetIndex = UnityEngine.Random.Range(0, planets.Count);
+
+        if (planets.Count == 0)
+            return;
         
         var planetPosition = planets[planetIndex].transform.position;
         var planetRadius = planets[planetIndex].GetComponent<SphereCollider>().radius;

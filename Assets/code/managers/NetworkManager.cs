@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using UnityEngine;
 using System.Threading;
 using Unity.VisualScripting;
@@ -47,7 +48,6 @@ class NetworkPlayerData
 
 public class NetworkManager : ManagerBase 
 {
-    public GameObject EnemyPrefab;
     public delegate void ConnectedCallback();
     public delegate void DisconnectedCallback();
 
@@ -59,12 +59,14 @@ public class NetworkManager : ManagerBase
     Queue<NetworkMessage> messages = new Queue<NetworkMessage>(100);
     NetworkMessage move_message = new NetworkMessage(1000, null);
     Dictionary<UInt32, NetworkPlayerData> network_players = new Dictionary<uint, NetworkPlayerData>(20);
+    
+    private string _playerName = "Player";
 
-    void tx_spawn_player_single(UInt32 target, Vector3 position) {
+    void tx_spawn_player_single(UInt32 target, Vector3 position, string playerName) {
 		if (!NetworkClient.is_connected ())
 			return;
 
-        byte[] packet = new byte[sizeof(UInt32) + 3*sizeof(float)];
+        byte[] packet = new byte[sizeof(UInt32) + 3*sizeof(float) + 16*sizeof(char)];
         MemoryStream memStream = new MemoryStream(packet);
         BinaryWriter binWriter = new BinaryWriter(memStream);
 
@@ -72,6 +74,7 @@ public class NetworkManager : ManagerBase
         binWriter.Write(position.x);
         binWriter.Write(position.y);
         binWriter.Write(position.z);
+        binWriter.Write(Encoding.ASCII.GetBytes(playerName.PadRight(16, '\0')));
         binWriter.Flush();
 
         messages.Enqueue(new NetworkMessage(target, packet));
@@ -80,7 +83,7 @@ public class NetworkManager : ManagerBase
     public void tx_spawn_player(Vector3 position)
     {
         //broadcast
-        tx_spawn_player_single(0, position);
+        tx_spawn_player_single(0, position, _playerName);
     }
 
 	public void tx_die() {
@@ -202,6 +205,15 @@ public class NetworkManager : ManagerBase
             BitConverter.ToSingle(packet, offset + 3 * sizeof(float))
         );
     }
+    
+    string parse_string(byte[] packet, int offset)
+    {
+        var result = Encoding.ASCII.GetString(packet, offset, 16);
+        // remove all ?
+        result = result.Replace("?", "");
+        Debug.Log($"Parsed name: {result}");
+        return result;
+    }
 
     void on_raw_msg(byte[] packet)
     {
@@ -216,7 +228,8 @@ public class NetworkManager : ManagerBase
             case MsgFormat.SpawnPlayer:
             {
                 Vector3 pos = parse_vec3(packet, 16);
-                rx_spawn_player(sender, pos);
+                string playerName = parse_string(packet, 24);
+                rx_spawn_player(sender, pos, playerName);
                 return;
             }
             case MsgFormat.DestroyPlayer:
@@ -260,8 +273,8 @@ public class NetworkManager : ManagerBase
     void rx_hello(UInt32 player)
     {
         //TODO: Posljemo, samo ce smo zivi aka ingame
-		if(!FindObjectOfType<FirstPersonController>().isDead)
-        	tx_spawn_player_single(player, Vector3.zero);
+        if (!FindObjectOfType<FirstPersonController>().isDead)
+            tx_spawn_player_single(player, Vector3.zero, _playerName);
     }
 
     void safeStopCoroutine(Coroutine routine)
@@ -282,13 +295,13 @@ public class NetworkManager : ManagerBase
         PowerUpManager.Instance.SpawnPowerup(pos, rot, index);
     }
 
-    void rx_spawn_player(UInt32 player, Vector3 position)
+    void rx_spawn_player(UInt32 player, Vector3 position, string playerName)
     {
-        GameManager.Instance.QueueSpawnEnemy($"Player{player}", position, (enemy) => {
+        Debug.Log("Rx: spawn player: " + player + ", " + position);
+        
+        GameManager.Instance.QueueSpawnEnemy(playerName, position, (enemy) => {
             network_players.Add(player, new NetworkPlayerData(player, enemy));
         });
-
-        Debug.Log("Rx: spawn player: " + player + ", " + position);
     }
 	void rx_die(UInt32 player) {
 		//za enkrat se nimamo nic, lahko pa tule predvajamo die animacijo...
@@ -339,7 +352,9 @@ public class NetworkManager : ManagerBase
     {
         foreach(UInt32 key in network_players.Keys)
         {
-            StopCoroutine(network_players[key].move_coroutine);
+            if (network_players[key].move_coroutine != null) 
+                StopCoroutine(network_players[key].move_coroutine);
+            
             Destroy(network_players[key].g);
         }
         network_players.Clear();
@@ -360,10 +375,11 @@ public class NetworkManager : ManagerBase
         connecting = false;
     }
 
-    public void Connect(System.String _ip)
+    public void Connect(System.String _ip, string playerName)
     {
         
         ip = _ip;
+        _playerName = playerName;
         if(!connecting && !NetworkClient.is_connected())
         {
             Debug.Log($"Connecting to: '{_ip}'");

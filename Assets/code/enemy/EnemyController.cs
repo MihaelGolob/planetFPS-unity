@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
@@ -57,9 +55,11 @@ public class EnemyController : MonoBehaviour {
         _oldPosition = position;
     }
 
-    public void SetName(string name) {
-        _name = name;
-        _camera = Camera.main;
+    public void SetName(string playerName) {
+        _name = playerName;
+        Debug.Log($"Setting name to {_name}");
+        if (_camera == null)
+            _camera = Camera.main;
         
         nameText.text = _name;
         nameCanvas.worldCamera = _camera;

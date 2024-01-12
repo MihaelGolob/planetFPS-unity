@@ -46,8 +46,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void OnPlayButtonPressed()
     {
-        networkManager.Connect(IpInputField.textComponent.GetParsedText().Replace("\u200B", ""));
-        //TODO  goto Loading screen
+        networkManager.Connect(IpInputField.textComponent.GetParsedText().Replace("\u200B", ""), usernameText.GetParsedText());
     }
     public void OnConnected()
     {

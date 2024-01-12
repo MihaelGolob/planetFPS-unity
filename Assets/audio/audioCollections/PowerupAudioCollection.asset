@@ -19,4 +19,5 @@ MonoBehaviour:
   _playOrder: 1
   _loop: 0
   _stopOnSceneChange: 1
-  _audioClips: []
+  _audioClips:
+  - {fileID: 8300000, guid: 94967bd642f754c4ab7f91a4c45fd949, type: 3}
