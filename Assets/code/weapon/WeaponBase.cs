@@ -102,6 +102,18 @@ public abstract class WeaponBase : MonoBehaviour {
         _bulletsLeft = magazineSize;
         HUDManager.Instance.UpdateAmmoCount(_bulletsLeft);
     }
+    
+    public void UpdateAmmoCount() {
+        HUDManager.Instance.UpdateAmmoCount(_bulletsLeft);
+    }
+
+    public void LowerWeapon() {
+        _animator.SetTrigger(_gunDownParameter);
+    }
+    
+    public void RaiseWeapon() {
+        _animator.SetTrigger(_gunUpParameter);
+    }
 
     private IEnumerator ReloadInternal() {
         AudioSystem.Instance.PlaySound(reloadAudioCollection, transform.position);

@@ -110,7 +110,7 @@ MonoBehaviour:
   initialVelocityFactor: 1
   bulletSpeed: 50
   bulletLifetime: 10
-  shootingFrequency: 5
+  shootingFrequency: 2
   bulletDamage: 10
   magazineSize: 8
   reloadTime: 2

@@ -56,7 +56,9 @@ MonoBehaviour:
   airSpeed: 5
   upDownAngleRotation: {x: -85, y: 75}
   jumpHeight: 5
-  weapon: {fileID: 2092113688104482271}
+  assaultRifleWeapon: {fileID: 3870296815460209811}
+  laserGunWeapon: {fileID: 2092113688104482271}
+  weaponSwitchTime: 1
   damageEffectController: {fileID: 960291810159618581}
   gravityAcceleration: 9.8
   hurtAudioCollection: {fileID: 11400000, guid: 05f6ee17dc576a740bfe2421b310e485,
@@ -530,6 +532,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2488247198727795707}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3870296815460209811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1674786928124438376, guid: b96d70cf37bd4b44a9b0754813dc01a2,
+    type: 3}
+  m_PrefabInstance: {fileID: 2488247198727795707}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910975ea8f8e2544e8e2f7e5d9c3f2c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6324146239595227884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -576,7 +590,7 @@ PrefabInstance:
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.29600048
+      value: -1.2
       objectReference: {fileID: 0}
     - target: {fileID: 3837001255396911880, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}
@@ -627,16 +641,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Intensity
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5389488442889543475, guid: db3513fc4f18fad4882ee7082cf913dc,
-        type: 3}
-      propertyPath: bulletSpeed
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 5389488442889543475, guid: db3513fc4f18fad4882ee7082cf913dc,
-        type: 3}
-      propertyPath: magazineSize
-      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5389488442889543475, guid: db3513fc4f18fad4882ee7082cf913dc,
         type: 3}

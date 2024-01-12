@@ -1,6 +1,7 @@
 using System.Collections;
 using Ineor.Utils.AudioSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -22,8 +23,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     [SerializeField] private Vector2 upDownAngleRotation = new Vector2(-90.0f, 90.0f);
     [SerializeField] public float jumpHeight = 5;
     
-    [Header("Shooting")]
-    [SerializeField] private WeaponBase weapon;
+    [Header("Weapons")]
+    [SerializeField] private WeaponBase assaultRifleWeapon;
+    [SerializeField] private WeaponBase laserGunWeapon;
+    [SerializeField] private float weaponSwitchTime = 1f;
     [SerializeField] private FullScreenDamageController damageEffectController;
 
     [Header("Gravity")] 
@@ -44,6 +47,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     private Transform _cameraTransform;
     private Rigidbody _rigidbody;
     private NetworkManager _network_manager;
+    
+    private WeaponBase _activeWeapon;
+    private bool _isSwitching;
 
 	public bool isGrounded { private set; get; } = false;
     private float _gravitySpeed;
@@ -68,11 +74,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _network_manager = NetworkManager.game_object.GetComponent<NetworkManager>();
         _network_manager.tx_spawn_player(_rootTransform.position); // To je sicer delo game Managerja ...
         
+        _activeWeapon = assaultRifleWeapon;
+        _activeWeapon.UpdateAmmoCount();
+        
         HUDManager.Instance.UpdateHealth(Health);
     }
     
-    void CalculateVelocity()
-    {
+    private void CalculateVelocity() {
         player_velocity = (_cameraTransform.position - prev_pos) * (Time.deltaTime * 2000);
         prev_pos = _cameraTransform.position;
     }
@@ -85,6 +93,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
             Shoot();
             Reload();
             Zipline();
+            SwitchWeaponInput();
         }
         CalculateVelocity();
 
@@ -155,14 +164,20 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void Shoot() {
-        if (Input.GetMouseButton(0)) {
-            weapon.Shoot(player_velocity, _cameraTransform.forward, transform.position);
+        if (Input.GetMouseButton(0) && !_isSwitching) {
+            _activeWeapon.Shoot(player_velocity, _cameraTransform.forward, transform.position);
         }
     }
     
     private void Reload() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            weapon.Reload();
+        if (Input.GetKeyDown(KeyCode.R) && !_isSwitching) {
+            _activeWeapon.Reload();
+        }
+    }
+
+    private void SwitchWeaponInput() {
+        if (Input.GetKeyDown(KeyCode.Q) && !_isSwitching) {
+            StartCoroutine(SwitchWeapons());
         }
     }
 
@@ -203,6 +218,21 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         }
     }
 
+    public IEnumerator SwitchWeapons() {
+        _isSwitching = true;
+        _activeWeapon.LowerWeapon();
+        
+        yield return new WaitForSeconds(weaponSwitchTime);
+        
+        _activeWeapon.gameObject.SetActive(false);
+        _activeWeapon = _activeWeapon == assaultRifleWeapon ? laserGunWeapon : assaultRifleWeapon;
+        _activeWeapon.gameObject.SetActive(true);
+        
+        _activeWeapon.UpdateAmmoCount();
+        _activeWeapon.RaiseWeapon();
+        _isSwitching = false;
+    }
+
     public void TakeDamage(int damage) {
         Health = Mathf.Clamp(Health - damage, 0, 100);
         HUDManager.Instance.UpdateHealth(Health);
@@ -218,7 +248,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     public void Respawn(Vector3 position) {
         _rootTransform.position = position;
         Health = 100;
-        weapon.InstantReload();
+        _activeWeapon.InstantReload();
         HUDManager.Instance.UpdateHealth(Health);
 		isDead = false;
     }
