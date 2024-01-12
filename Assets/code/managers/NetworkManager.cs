@@ -287,7 +287,7 @@ public class NetworkManager : ManagerBase
     void rx_spawn_bullet(Vector3 pos, Vector3 velocity)
     {
         //TODO, Tole je zacasno ...
-		FindObjectOfType<WeaponNormal>().CreateBullet(pos, velocity);
+		FindObjectOfType<WeaponLaser>().CreateBullet(pos, velocity);
 	}
 
     void rx_spawn_powerup(Vector3 pos, Quaternion rot, int index)

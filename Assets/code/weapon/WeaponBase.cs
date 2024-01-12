@@ -5,27 +5,27 @@ using UnityEngine.VFX;
 
 public abstract class WeaponBase : MonoBehaviour {
     [Header("basic")]
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] protected GameObject bulletPrefab;
+    [SerializeField] protected Transform bulletSpawnPoint;
     
     [Header("Weapon parameters")]
-    [SerializeField] private float initialVelocityFactor = 0.6f;
-    [SerializeField] private float bulletSpeed;
-    [SerializeField] private float bulletLifetime;
-    [SerializeField] private float shootingFrequency;
-    [SerializeField] private int bulletDamage;
-    [SerializeField] private int magazineSize;
-    [SerializeField] private float reloadTime;
+    [SerializeField] protected float initialVelocityFactor = 0.6f;
+    [SerializeField] protected float bulletSpeed;
+    [SerializeField] protected float bulletLifetime;
+    [SerializeField] protected float shootingFrequency;
+    [SerializeField] protected int bulletDamage;
+    [SerializeField] protected int magazineSize;
+    [SerializeField] protected float reloadTime;
     
     [Header("Effects")]
-    [SerializeField] private VisualEffect muzzleFlash;
-    [SerializeField] private Light muzzleLight;
-    [SerializeField] private float lightDuration = 0.1f;
+    [SerializeField] protected VisualEffect muzzleFlash;
+    [SerializeField] protected Light muzzleLight;
+    [SerializeField] protected float lightDuration = 0.1f;
     
     [Header("Audio collections")]
-    [SerializeField] private AudioCollection shootAudioCollection;
-    [SerializeField] private AudioCollection emptyMagazineAudioCollection;
-    [SerializeField] private AudioCollection reloadAudioCollection;
+    [SerializeField] protected AudioCollection shootAudioCollection;
+    [SerializeField] protected AudioCollection emptyMagazineAudioCollection;
+    [SerializeField] protected AudioCollection reloadAudioCollection;
     
     // private variables
     private float _lastShootTime;
@@ -58,7 +58,7 @@ public abstract class WeaponBase : MonoBehaviour {
     //Popravi, ce mas cas, tj. Naredi neko staticno fcijo za generiranje metkov ali kaj takega...
 
 
-    public void CreateBullet(Vector3 pos, Vector3 velocity)
+    public virtual void CreateBullet(Vector3 pos, Vector3 velocity)
     {
         var bulletObject = Instantiate(bulletPrefab, pos, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();

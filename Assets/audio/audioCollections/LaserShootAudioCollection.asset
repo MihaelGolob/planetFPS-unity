@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e50880d18ab4389b43959efee62eb2d, type: 3}
-  m_Name: PowerupAudioCollection
+  m_Name: LaserShootAudioCollection
   m_EditorClassIdentifier: 
   _audioGroup: Effects
   _volume: 1
@@ -20,4 +20,6 @@ MonoBehaviour:
   _loop: 0
   _stopOnSceneChange: 1
   _audioClips:
-  - {fileID: 8300000, guid: 94967bd642f754c4ab7f91a4c45fd949, type: 3}
+  - {fileID: 8300000, guid: 2f2f938677e3fa64188a4ef0b7c9cdf7, type: 3}
+  - {fileID: 8300000, guid: 3b185b31013e451409d7f39d0ca4134a, type: 3}
+  - {fileID: 8300000, guid: bd949a77489fe094db617a0c429a1ca0, type: 3}

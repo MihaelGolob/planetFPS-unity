@@ -104,20 +104,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ae5722b84e8ee4ba10e7b3c264e323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 2392175189532798469, guid: 63c0b022037bbc34f8b25506bc963610,
+  bulletPrefab: {fileID: 2392175189532798469, guid: d8b615d710aaea045912565b2d90a9c2,
     type: 3}
   bulletSpawnPoint: {fileID: 0}
-  initialVelocityFactor: 0.6
-  bulletSpeed: 15
+  initialVelocityFactor: 1
+  bulletSpeed: 50
   bulletLifetime: 10
   shootingFrequency: 5
   bulletDamage: 10
-  magazineSize: 5
+  magazineSize: 8
   reloadTime: 2
   muzzleFlash: {fileID: 2848065083022603530}
   muzzleLight: {fileID: 5328014361992468016}
   lightDuration: 0.1
-  shootAudioCollection: {fileID: 11400000, guid: 6b6dc3f36c073f24fa72750cbdb67326,
+  shootAudioCollection: {fileID: 11400000, guid: 57c71cf53bc0e004f8da663a242747c6,
     type: 2}
   emptyMagazineAudioCollection: {fileID: 11400000, guid: ca429ee34d065964cba5dde2f19f5e99,
     type: 2}
@@ -233,7 +233,10 @@ VisualEffect:
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.6880439, y: 4.4201603, z: 1.1017485, w: 1}
+        m_Name: FlashColor
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -332,7 +335,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0.7004973, b: 0.09803921, a: 1}
+  m_Color: {r: 0.3863207, g: 1, b: 0.09803921, a: 1}
   m_Intensity: 3
   m_Range: 10
   m_SpotAngle: 30
