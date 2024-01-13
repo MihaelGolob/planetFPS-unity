@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 1782702501690864755, guid: 60770bdb4dc667c45bea53db0339dc05,
     type: 3}
+  backgroundMusic: {fileID: 11400000, guid: d7db5e842050d064bb53bfa0dc833635, type: 2}

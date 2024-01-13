@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Ineor.Utils.AudioSystem;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,7 @@ public class GameManager : ManagerBase {
     
     // inspector assigned
     [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private AudioCollection backgroundMusic;
     
     // private
     private NetworkManager _networkManager;
@@ -29,6 +31,7 @@ public class GameManager : ManagerBase {
     
     private void Start() {
         _networkManager = NetworkManager.game_object.GetComponent<NetworkManager>();
+        AudioSystem.Instance.PlaySound(backgroundMusic, Vector3.zero);
     }
 
     private void Update() {
