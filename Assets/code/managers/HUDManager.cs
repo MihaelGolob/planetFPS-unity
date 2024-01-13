@@ -20,7 +20,6 @@ public class HUDManager : ManagerBase {
     [Header("UI elements")] 
     [SerializeField] private TMP_Text ammoCountText;
     [SerializeField] private TMP_Text healthText;
-    [SerializeField] private TMP_Text killCountText;
     [Header("Pause menu")]
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject soundOn;
@@ -55,10 +54,6 @@ public class HUDManager : ManagerBase {
     
     public void UpdateHealth(int health) {
         healthText.text = health.ToString();
-    }
-    
-    public void UpdateKillCount(int killCount) {
-        killCountText.text = killCount.ToString();
     }
 
     public void EnablePauseMenu(bool enable) {
