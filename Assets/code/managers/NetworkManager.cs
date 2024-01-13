@@ -230,7 +230,7 @@ public class NetworkManager : ManagerBase
             case MsgFormat.SpawnPlayer:
             {
                 Vector3 pos = parse_vec3(packet, 16);
-                string playerName = parse_string(packet, 24);
+                string playerName = parse_string(packet, 28);
                 rx_spawn_player(sender, pos, playerName);
                 return;
             }
