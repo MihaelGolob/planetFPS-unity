@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {fileID: 4973304201608251605}
   end: {fileID: 9097950538525152917}
-  speed: 0.2
+  speed: 1
   cableRadius: 0.05
   cableMaterial: {fileID: 2100000, guid: 46881e126e6f4c34d9a337fb6e5200af, type: 2}
   startCollider: {fileID: 1973409159225679100}
