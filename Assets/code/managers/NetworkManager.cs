@@ -291,9 +291,9 @@ public class NetworkManager : ManagerBase
     {
         //TODO, Tole je zacasno ...
         if (type == BulletType.Laser)
-            FindObjectOfType<WeaponLaser>().CreateBullet(pos, velocity);
+            FindObjectOfType<WeaponLaser>().CreateBullet(pos, velocity, true);
         else 
-            FindObjectOfType<WeaponNormal>().CreateBullet(pos, velocity);
+            FindObjectOfType<WeaponNormal>().CreateBullet(pos, velocity, true);
 	}
 
     void rx_spawn_powerup(Vector3 pos, Quaternion rot, int index)

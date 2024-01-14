@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour {
     [SerializeField] private VisualEffect bulletImpact;
     [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private BulletType bulletType;
+	[SerializeField] private float localBulletDeadTime = 0.2f;
     
     public BulletType BulletType => bulletType;
     
@@ -24,16 +25,20 @@ public class Bullet : MonoBehaviour {
     private Vector3 _gravityVelocity;
     private Vector3 _gravitySource;
     private bool _useGravity;
+	private bool _networkBullet = false;
+	private float _bulletCreationTime;
 
     private bool _collision;
 
     private Rigidbody _rb;
 
-    public void Init(Vector3 velocity, int damage, float lifetime, bool useGravity = true) {
+	public void Init(Vector3 velocity, int damage, float lifetime, bool useGravity = true, bool network_bullet=false) {
         _lifetime = lifetime;
         _damage = damage;
         _useGravity = useGravity;
-        
+		_networkBullet = network_bullet;
+		_bulletCreationTime = Time.time;
+
         _isInitialized = true;
         _rb = GetComponent<Rigidbody>();
         _rb.velocity = velocity;
@@ -69,8 +74,12 @@ public class Bullet : MonoBehaviour {
     }
     
     private void OnCollisionEnter(Collision other) {
-        if (!_isInitialized || _collision) return;
+        if (!_isInitialized || _collision)
+			return; 
         
+		if (!_networkBullet && (Time.time - _bulletCreationTime < localBulletDeadTime))
+			return;
+
         var damageable = other.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(_damage);
 

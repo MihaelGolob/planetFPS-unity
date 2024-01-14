@@ -54,7 +54,7 @@ MonoBehaviour:
   mouseSensitivity: 5
   moveSpeed: 5
   airSpeed: 5
-  upDownAngleRotation: {x: -85, y: 75}
+  upDownAngleRotation: {x: -85, y: 90}
   jumpHeight: 5
   assaultRifleWeapon: {fileID: 3870296815460209811}
   laserGunWeapon: {fileID: 2092113688104482271}

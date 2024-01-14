@@ -56,11 +56,11 @@ public abstract class WeaponBase : MonoBehaviour {
     //Popravi, ce mas cas, tj. Naredi neko staticno fcijo za generiranje metkov ali kaj takega...
 
 
-    public virtual Bullet CreateBullet(Vector3 pos, Vector3 velocity)
+	public virtual Bullet CreateBullet(Vector3 pos, Vector3 velocity, bool network_bullet=false)
     {
         var bulletObject = Instantiate(bulletPrefab, pos, Quaternion.identity);
         var bullet = bulletObject.GetComponent<Bullet>();
-        bullet.Init(velocity, bulletDamage, bulletLifetime);
+		bullet.Init(velocity, bulletDamage, bulletLifetime, true, network_bullet);
         
         return bullet;
     }
