@@ -191,13 +191,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         if (Input.GetKeyDown(KeyCode.E)) {
             isZiplining = true;
             var info = _activeZipline.GetZiplineInfo(_ziplineEnterCollider);
-			StartCoroutine(ZiplineInterpolation((info.start.position, info.end.position, info.speed), info.start.up, info.end.up));
+			StartCoroutine(ZiplineInterpolation((info.start.position, info.end.position, info.speed), info.start, info.end));
         }
     }
 
-	private IEnumerator ZiplineInterpolation((Vector3 start, Vector3 end, float speed) info, Vector3 pole1_up, Vector3 pole2_up) {
+	private IEnumerator ZiplineInterpolation((Vector3 start, Vector3 end, float speed) info, Transform t_start, Transform t_end) {
 		Quaternion quat1 = _rootTransform.rotation;
-		Quaternion quat2 = Quaternion.FromToRotation(pole1_up, pole2_up);
+		Quaternion quat2 = t_end.rotation;
 
         var t = 0f;
         while (t < 1f) {
