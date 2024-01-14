@@ -56,9 +56,9 @@ public class NetworkManager : ManagerBase
 
     public static readonly float send_frequency = 20;
     public static GameObject game_object;
-    Queue<NetworkMessage> messages = new Queue<NetworkMessage>(100);
-    NetworkMessage move_message = new NetworkMessage(1000, null);
-    Dictionary<UInt32, NetworkPlayerData> network_players = new Dictionary<uint, NetworkPlayerData>(20);
+    static Queue<NetworkMessage> messages = new Queue<NetworkMessage>(100);
+    static NetworkMessage move_message = new NetworkMessage(1000, null);
+    static Dictionary<UInt32, NetworkPlayerData> network_players = new Dictionary<uint, NetworkPlayerData>(20);
     
     private string _playerName = "Player";
 
@@ -430,8 +430,8 @@ public class NetworkManager : ManagerBase
         }
     }
     
-	bool sending = false;
-	void threaded_send()
+	static bool sending = false;
+	static void threaded_send()
 	{
 		sending = true;
 
