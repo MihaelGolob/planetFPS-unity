@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab5466a5a874328833b39fd6087d4e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerupExistenceDuration: 20
+  powerupExistenceDuration: 30
   powerupPrefabs:
   - {fileID: 6161747573232116749, guid: 0b6b527a4bd487e4ca6c0a0c153a95de, type: 3}
   - {fileID: 413920920747880256, guid: cbdb943eb812da540a388d3b156c15e0, type: 3}
   - {fileID: 7342737998588866926, guid: 22b43f6ec3013964d8210d054bc5ada9, type: 3}
-  powerupSpawnRate: 10
+  powerupSpawnRate: 5
