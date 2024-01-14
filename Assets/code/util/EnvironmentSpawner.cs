@@ -13,7 +13,7 @@ public class EnvironmentSpawner : MonoBehaviour {
     private float _radius;
     
     public void Spawn() {
-        _radius = GetComponent<SphereCollider>().radius;
+        _radius = GetComponent<SphereCollider>().radius * transform.localScale.x;
         // destroy all children
         while (transform.childCount > 0) {
             DestroyImmediate(transform.GetChild(0).gameObject);

@@ -41,7 +41,7 @@ public class PowerUpManager : ManagerBase
             return;
         
         var planetPosition = planets[planetIndex].transform.position;
-        var planetRadius = planets[planetIndex].GetComponent<SphereCollider>().radius;
+        var planetRadius = planets[planetIndex].GetComponent<SphereCollider>().radius * planets[planetIndex].transform.localScale.x;
         
         var randomPosition = UnityEngine.Random.onUnitSphere * (planetRadius + 1);
         randomPosition += planetPosition;

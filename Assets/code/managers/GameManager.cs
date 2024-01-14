@@ -75,7 +75,7 @@ public class GameManager : ManagerBase {
         
         // get random position on planet
         var planetPosition = planets[planetIndex].transform.position;
-        var planetRadius = planets[planetIndex].GetComponent<SphereCollider>().radius;
+        var planetRadius = planets[planetIndex].GetComponent<SphereCollider>().radius * planets[planetIndex].transform.localScale.x;
         
         var randomPosition = Random.onUnitSphere * (planetRadius + 3);
         randomPosition += planetPosition;
