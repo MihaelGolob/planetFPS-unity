@@ -78,7 +78,7 @@ public class Bullet : MonoBehaviour {
 			return; 
         
 		bool explode = true;
-		Collider[] close_collisions = Physics.OverlapSphere(transform.position, 0.5f);
+		Collider[] close_collisions = Physics.OverlapSphere(transform.position, 2.0f);
 		foreach (Collider c in close_collisions) {
 			var damageable = other.gameObject.GetComponent<IDamageable>();
 			if (damageable != null) {

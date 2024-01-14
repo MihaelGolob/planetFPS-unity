@@ -133,7 +133,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
 		RaycastHit hit;
 
 		if(Physics.SphereCast(_rootTransform.position + _rootTransform.up * 1.25f, 0.25f, -_rootTransform.up, out hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
-			isGrounded = hit.distance <= 1.0f;
+			isGrounded = hit.distance <= 1.01f;
 		}
 			
         var speed = isGrounded ? moveSpeed : airSpeed;
@@ -161,7 +161,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
                 _gravitySpeed = jumpHeight;
             }
         }
-        else
+		else if(!isGrounded)
         {
             _gravitySpeed += -gravityAcceleration * Time.deltaTime;
         }
