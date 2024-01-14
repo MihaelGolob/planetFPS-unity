@@ -79,6 +79,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
         _activeWeapon.UpdateAmmoCount();
         
         HUDManager.Instance.UpdateHealth(Health);
+        
+        // go to random spawn position
+        transform.position = GameManager.Instance.GetRandomSpawnPosition();
     }
     
     private void CalculateVelocity() {
