@@ -465,21 +465,22 @@ public class NetworkManager : ManagerBase
             }
         }
 
-        NetworkClient.update();
-        
-        //send heartbeats
-        if(NetworkClient.is_connected())
-        {
-            //Tule posljemo vse paketke in omejimo na idk 20 ali pa 40 Hz
-			float time = Time.time;
-			if(!sending && (time - last_update > (1.0f / send_frequency)))
-            {
-				sending = true;
-				last_update = time;
-				Thread thread = new Thread(new ThreadStart(threaded_send));
-				thread.Start();
-            }
-        }
+		if (!sending) {
+			NetworkClient.update();
+			//send heartbeats
+			if(NetworkClient.is_connected())
+			{
+				//Tule posljemo vse paketke in omejimo na idk 20 ali pa 40 Hz
+				float time = Time.time;
+				if(!sending && (time - last_update > (1.0f / send_frequency)))
+				{
+					sending = true;
+					last_update = time;
+					Thread thread = new Thread(new ThreadStart(threaded_send));
+					thread.Start();
+				}
+			}
+		}
     }
 
 
