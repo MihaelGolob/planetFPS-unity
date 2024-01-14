@@ -481,7 +481,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 0.5}
+  m_SizeDelta: {x: 2.5832, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2915389320801179879
 CanvasRenderer:
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Marko
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e3b19db643d6a14cb1b3c71222339dd, type: 2}
   m_sharedMaterial: {fileID: -7191259677327584797, guid: 5e3b19db643d6a14cb1b3c71222339dd,
@@ -555,9 +555,9 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -1209,7 +1209,6 @@ MonoBehaviour:
   nameCanvas: {fileID: 6005149264967572656}
   nameText: {fileID: 5072805282484741416}
   animationUpdateFrequency: 0.1
-  _name: 
 --- !u!1 &1789272960074739661
 GameObject:
   m_ObjectHideFlags: 0
