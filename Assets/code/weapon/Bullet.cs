@@ -86,10 +86,12 @@ public class Bullet : MonoBehaviour {
 					explode = false;
 					continue;
 				}
-				damageable?.TakeDamage(_damage);
+				damageable.TakeDamage(_damage);
+				bulletExplode();
+				return;
 			}
 		}
-		if(explode)
-			bulletExplode();
+		if (explode)
+			bulletExplode ();
     }
 }
