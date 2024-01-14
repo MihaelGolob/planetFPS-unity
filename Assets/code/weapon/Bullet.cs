@@ -77,11 +77,12 @@ public class Bullet : MonoBehaviour {
         if (!_isInitialized || _collision)
 			return; 
         
-		if (!_networkBullet && (Time.time - _bulletCreationTime < localBulletDeadTime))
-			return;
-
         var damageable = other.gameObject.GetComponent<IDamageable>();
-        damageable?.TakeDamage(_damage);
+		if (damageable != null) {
+			if (!_networkBullet && (Time.time - _bulletCreationTime < localBulletDeadTime))
+				return;
+			damageable?.TakeDamage(_damage);
+		}
 
         bulletExplode();
     }
