@@ -151,7 +151,7 @@ MonoBehaviour:
   bulletImpact: {fileID: 4018198174604324126}
   meshRenderer: {fileID: 2616727351642183294}
   bulletType: 0
-  localBulletDeadTime: 0.4
+  localBulletDeadTime: 0.2
   explosionRadius: 0.3
 --- !u!2083052967 &4018198174604324126
 VisualEffect:
