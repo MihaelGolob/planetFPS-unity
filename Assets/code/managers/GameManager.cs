@@ -68,7 +68,7 @@ public class GameManager : ManagerBase {
         onSpawned?.Invoke(enemy);
     }
     
-    private Vector3 GetRandomSpawnPosition() {
+    public Vector3 GetRandomSpawnPosition() {
         // get random planet
         var planets = GravityManager.Instance.GetGravitySources();
         var planetIndex = Random.Range(0, planets.Count);
