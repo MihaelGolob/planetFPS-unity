@@ -91,13 +91,13 @@ public class Zipline : MonoBehaviour {
         }
     }
 
-    public (Vector3 start, Vector3 end, float speed) GetZiplineInfo(Collider enterCollider) {
+    public (Transform start, Transform end, float speed) GetZiplineInfo(Collider enterCollider) {
         if (enterCollider == startCollider) {
-            return (start.position, end.position, speed);
+            return (start, end, speed);
         } else if (enterCollider == endCollider) {
-            return (end.position, start.position, speed);
+            return (end, start, speed);
         } else {
-            return (Vector3.zero, Vector3.zero, 0);
+            return (null, null, 0);
         }
     }
 }
