@@ -12,18 +12,12 @@ public class GunBobbing : MonoBehaviour
     [HideInInspector] public Vector3 target_pos = Vector3.zero;
     private float p = 0;
 
-    void Start()
-    {
-
-    }
-
     void FixedUpdate()
     {
         //Malo zlorabljam lerp za tole heh
         transform.localPosition = Vector3.Lerp(transform.localPosition, target_pos, transition_factor);
         
-        float player_velocity_mag = fps_controller.player_velocity.magnitude;
-		if (player_velocity_mag > 0.02f && fps_controller.isGrounded)
+		if (fps_controller.IsMoving && fps_controller.isGrounded)
         {
             p += bob_speed;
             while (p >= 2 * Mathf.PI)

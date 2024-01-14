@@ -40,6 +40,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     
     // public members
     public int Health { get; set; } = 100;
+    public bool IsMoving { get; set; } = false;
     
     // private variables
     private Transform _rootTransform;
@@ -112,14 +113,17 @@ public class FirstPersonController : MonoBehaviour, IDamageable {
     }
 
     private void UpdateMovement() {
+        IsMoving = false;
         if (isZiplining) return;
 
         Vector3 moveDir =
             _bodyTransform.forward * Input.GetAxis("Vertical") +
             _bodyTransform.right * Input.GetAxis("Horizontal");
 
-        if (moveDir.magnitude != 0)
+        if (moveDir.magnitude != 0) {
             moveDir = moveDir.normalized;
+            IsMoving = true;
+        }
 
         //isGrounded = isGroundedComponent.isGrounded;
 		//isGrounded = true;
