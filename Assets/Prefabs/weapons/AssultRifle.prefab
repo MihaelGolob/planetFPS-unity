@@ -342,7 +342,7 @@ MonoBehaviour:
   bulletSpeed: 15
   bulletLifetime: 10
   shootingFrequency: 10
-  bulletDamage: 5
+  bulletDamage: 20
   magazineSize: 25
   reloadTime: 2
   muzzleFlash: {fileID: 9026279592078745407}
