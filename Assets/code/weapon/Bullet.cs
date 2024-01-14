@@ -77,13 +77,19 @@ public class Bullet : MonoBehaviour {
         if (!_isInitialized || _collision)
 			return; 
         
-        var damageable = other.gameObject.GetComponent<IDamageable>();
-		if (damageable != null) {
-			if (!_networkBullet && (Time.time - _bulletCreationTime < localBulletDeadTime))
-				return;
-			damageable?.TakeDamage(_damage);
+		bool explode = true;
+		Collider[] close_collisions = Physics.OverlapSphere(transform.position, 0.5f);
+		foreach (Collider c in close_collisions) {
+			var damageable = other.gameObject.GetComponent<IDamageable>();
+			if (damageable != null) {
+				if (!_networkBullet && (Time.time - _bulletCreationTime < localBulletDeadTime)) {
+					explode = false;
+					continue;
+				}
+				damageable?.TakeDamage(_damage);
+			}
 		}
-
-        bulletExplode();
+		if(explode)
+			bulletExplode();
     }
 }
