@@ -12,6 +12,7 @@ public class Bullet : MonoBehaviour {
     [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private BulletType bulletType;
 	[SerializeField] private float localBulletDeadTime = 0.2f;
+	[SerializeField] private float explosionRadius = 5.0f;
     
     public BulletType BulletType => bulletType;
     
@@ -73,14 +74,14 @@ public class Bullet : MonoBehaviour {
         }
     }
     
-    private void OnCollisionEnter(Collision other) {
+    private void OnCollisionStay(Collision other) {
         if (!_isInitialized || _collision)
 			return; 
         
 		bool explode = true;
-		Collider[] close_collisions = Physics.OverlapSphere(transform.position, 2.0f);
+		Collider[] close_collisions = Physics.OverlapSphere(transform.position, explosionRadius);
 		foreach (Collider c in close_collisions) {
-			var damageable = other.gameObject.GetComponent<IDamageable>();
+			var damageable = c.gameObject.GetComponent<IDamageable>();
 			if (damageable != null) {
 				if (!_networkBullet && (Time.time - _bulletCreationTime < localBulletDeadTime)) {
 					explode = false;
